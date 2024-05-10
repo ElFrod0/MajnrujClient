@@ -54,12 +54,12 @@ jar {
 }
 
 loom {
-    mixin.defaultRefmapName = "purpurclient.refmap.json"
+    mixin.defaultRefmapName = "majnrujclient.refmap.json"
 }
 
 modrinth {
-    token = System.getenv("MODRINTH_TOKEN")
-    projectId = "purpurclient"
+    //token = System.getenv("MODRINTH_TOKEN")
+    projectId = "majnrujclient"
     versionName = project.minecraft_version + " build " + project.build_num
     versionNumber = project.version
     versionType = "release"
@@ -69,5 +69,5 @@ modrinth {
     dependencies {
         required.project "fabric-api"
     }
-    changelog = System.getenv("COMMIT_MESSAGE")
+    //changelog = System.getenv("COMMIT_MESSAGE")
 }

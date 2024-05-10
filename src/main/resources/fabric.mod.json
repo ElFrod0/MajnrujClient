@@ -1,30 +1,31 @@
 {
   "schemaVersion": 1,
-  "id": "purpurclient",
-  "version": "${version}",
-  "name": "Purpur Client",
-  "description": "Fixes client related issues",
+  "id": "majnrujclient",
+  "version": "mc1.20.4-v1.0",
+  "name": "Majnruj Client",
+  "description": "Based on PurpurClient mod, which fixes client related issues, while providing some features when playing on Purpur servers. This mod is expected to be run along with modified Fabulously Optimized modpack.",
   "authors": [
+    "ElFrod0",
     "BillyGalbreath"
   ],
   "contact": {
-    "homepage": "https://purpurmc.org/",
-    "sources": "https://github.com/PurpurMC/PurpurClient",
-    "issues": "https://github.com/PurpurMC/PurpurClient/issues"
+    "homepage": "https://majnruj.cz/",
+    "sources": "https://github.com/ElFrod0/MajnrujClient",
+    "issues": "https://github.com/ElFrod0/MajnrujClient/issues"
   },
   "license": "MIT",
   "icon": "assets/icon.png",
   "environment": "client",
   "entrypoints": {
     "client": [
-      "org.purpurmc.purpur.client.PurpurClient"
+      "me.elfrodo.majnruj.client.MajnrujClient"
     ],
     "modmenu": [
-      "org.purpurmc.purpur.client.gui.ModMenu"
+      "me.elfrodo.majnruj.client.gui.ModMenu"
     ]
   },
   "mixins": [
-    "purpurclient.mixins.json"
+    "majnrujclient.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=0.15.3",
@@ -34,7 +35,7 @@
   "custom": {
     "modmenu": {
       "links": {
-        "modmenu.discord": "https://discord.gg/mtAAnkk"
+        "modmenu.discord": "https://discord.gg/K8Tt5F5STH"
       }
     }
   }
