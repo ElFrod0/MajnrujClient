@@ -28,7 +28,7 @@ public class MixinMinecraftClient {
             return;
         }*/
         Minecraft client = Minecraft.getInstance();
-        StringBuilder sb = new StringBuilder(I18n.get("MAJNRUJ Client v1.0 (%s)", SharedConstants.getCurrentVersion().getName()));
+        StringBuilder sb = new StringBuilder(I18n.get("MAJNRUJ Client v1.1 (%s)", SharedConstants.getCurrentVersion().getName()));
         ClientPacketListener network = client.getConnection();
 
         //MAJNRUJ Client - Start

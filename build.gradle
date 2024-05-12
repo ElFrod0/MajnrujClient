@@ -1,7 +1,11 @@
 plugins {
     id 'com.github.johnrengelman.shadow' version '7.1.2'
+    id 'io.github.juuxel.loom-quiltflower' version '1.8.+'
     id 'fabric-loom' version '1.4-SNAPSHOT'
-    id "com.modrinth.minotaur" version "2.+"
+    id 'com.modrinth.minotaur' version '2.+'
+    id 'me.hypherionmc.cursegradle' version '2.+'
+    id 'com.github.breadmoirai.github-release' version '2.+'
+    id 'io.github.p03w.machete' version '1.1.2'
 }
 
 sourceCompatibility = JavaVersion.VERSION_17
@@ -16,12 +20,22 @@ repositories {
     maven {
         url = "https://maven.terraformersmc.com/"
     }
+    maven {
+        url = "https://maven.shedaniel.me"
+    }
+    maven {
+        url = "https://cursemaven.com"
+        content {
+            includeGroup "curse.maven"
+        }
+    }
     mavenCentral()
 }
 
 dependencies {
     minecraft("com.mojang:minecraft:${project.minecraft_version}")
     mappings(loom.officialMojangMappings())
+    //mappings("net.fabricmc:yarn:${project.minecraft_version}+build.+:v2")
     modImplementation("net.fabricmc:fabric-loader:${project.loader_version}")
     modImplementation("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}")
     modImplementation("com.terraformersmc:modmenu:${project.modmenu_version}")
@@ -32,6 +46,12 @@ dependencies {
     include("com.google.guava:guava:31.1-jre")
     include("com.typesafe:config:1.4.2")
     include("io.leangen.geantyref:geantyref:1.3.12")
+
+    // compatibility
+    modImplementation("com.terraformersmc:modmenu:6.2.0")
+    modCompileOnly("curse.maven:minimal-menu-405795:3826009")
+    modImplementation("curse.maven:minimal-menu-405795:3826009")
+    modRuntimeOnly("net.fabricmc.fabric-api:fabric-api:0.78.0+1.19.4")
 }
 
 processResources {

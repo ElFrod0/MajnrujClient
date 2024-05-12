@@ -4,6 +4,11 @@ pluginManagement {
             name = 'Fabric'
             url = 'https://maven.fabricmc.net/'
         }
+        maven {
+            name = 'QuiltMC'
+            url = 'https://maven.quiltmc.org/repository/release'
+        }
         gradlePluginPortal()
+        mavenCentral()
     }
 }
