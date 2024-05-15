@@ -10,18 +10,20 @@
 
 package me.elfrodo.majnruj.client.gui.screen.widget;
 
-import me.elfrodo.majnruj.client.mixin.accessor.AccessPressableTextWidget;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.components.PlainTextButton;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
 
+import me.elfrodo.majnruj.client.mixin.accessor.AccessPressableTextWidget;
+
 public class Text extends PlainTextButton {
     private final boolean clickable;
+    private static final Minecraft minecraft = Minecraft.getInstance();
 
     public Text(int x, int y, int width, int height, Component text, Screen screen) {
-        super(x, y, width, height, text, (button) -> screen.handleComponentClicked(text.getStyle()), Minecraft.getInstance().font);
+        super(x, y, width, height, text, (button) -> screen.handleComponentClicked(text.getStyle()), minecraft.font);
 
         clickable = text.getStyle().getClickEvent() != null;
         // remove underline if no click event

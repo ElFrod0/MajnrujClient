@@ -1,9 +1,10 @@
 package me.elfrodo.majnruj.client.config.options;
 
-import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.FormattedCharSequence;
+
+import java.util.List;
 
 public class DoubleOption implements Option<Double> {
     private final String key;
@@ -14,8 +15,9 @@ public class DoubleOption implements Option<Double> {
     private Component text;
 
     public DoubleOption(String key, Getter getter, Setter setter) {
+        Minecraft minecraft = Minecraft.getInstance();
         this.key = "majnrujclient.options." + key;
-        this.tooltip = Minecraft.getInstance().font.split(Component.translatable(this.key + ".tooltip"), 170);
+        this.tooltip = minecraft.font.split(Component.translatable(this.key + ".tooltip"), 170);
         this.getter = getter;
         this.setter = setter;
 
@@ -23,7 +25,6 @@ public class DoubleOption implements Option<Double> {
     }
 
     @Override
-    @SuppressWarnings("unused")
     public String key() {
         return this.key;
     }

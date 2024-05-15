@@ -1,8 +1,9 @@
 package me.elfrodo.majnruj.client.config;
 
+import org.spongepowered.configurate.objectmapping.ConfigSerializable;
+
 import me.elfrodo.majnruj.client.entity.Mob;
 import me.elfrodo.majnruj.client.entity.Seat;
-import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 @ConfigSerializable
 @SuppressWarnings("CanBeFinal")

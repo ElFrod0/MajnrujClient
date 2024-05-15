@@ -1,13 +1,14 @@
 package me.elfrodo.majnruj.client.gui.screen;
 
-import me.elfrodo.majnruj.client.MajnrujClient;
-import me.elfrodo.majnruj.client.gui.screen.widget.Tickable;
-
-import java.util.List;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+
+import java.util.List;
+
+import me.elfrodo.majnruj.client.MajnrujClient;
+import me.elfrodo.majnruj.client.gui.screen.widget.Tickable;
 
 public abstract class AbstractScreen extends Screen {
     private final Screen parent;

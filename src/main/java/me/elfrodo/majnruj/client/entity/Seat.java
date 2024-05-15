@@ -9,7 +9,6 @@ public class Seat {
     public double z;
 
     // no-args ctor for configurate
-    @SuppressWarnings("unused")
     public Seat() {
         this(0, 0, 0);
     }

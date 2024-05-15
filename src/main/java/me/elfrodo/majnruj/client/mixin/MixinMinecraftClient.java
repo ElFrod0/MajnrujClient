@@ -6,12 +6,15 @@ import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.client.server.IntegratedServer;
-import me.elfrodo.majnruj.client.MajnrujClient;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import me.elfrodo.majnruj.client.MajnrujClient;
+import me.elfrodo.majnruj.client.util.Constants;
 
 @Mixin(Minecraft.class)
 public class MixinMinecraftClient {
@@ -28,12 +31,12 @@ public class MixinMinecraftClient {
             return;
         }*/
         Minecraft client = Minecraft.getInstance();
-        StringBuilder sb = new StringBuilder(I18n.get("MAJNRUJ Client v1.1 (%s)", SharedConstants.getCurrentVersion().getName()));
+        StringBuilder sb = new StringBuilder(I18n.get(Constants.BRAND + " " + Constants.VERSION + " (%s)", SharedConstants.getCurrentVersion().getName()));
         ClientPacketListener network = client.getConnection();
 
         //MAJNRUJ Client - Start
-        MajnrujClient majnruj = MajnrujClient.instance();
-        String randomString = majnruj.getTitleText();
+        MajnrujClient instance = MajnrujClient.instance();
+        String randomString = instance.getTitleText();
         sb.append(" - ").append(randomString);
         //MAJNRUJ Client - End
 

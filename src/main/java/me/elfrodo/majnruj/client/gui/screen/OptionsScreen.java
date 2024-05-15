@@ -1,16 +1,18 @@
 package me.elfrodo.majnruj.client.gui.screen;
 
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+
+import java.util.ArrayList;
+
 import me.elfrodo.majnruj.client.MajnrujClient;
 import me.elfrodo.majnruj.client.config.Config;
 import me.elfrodo.majnruj.client.config.options.BooleanOption;
 import me.elfrodo.majnruj.client.config.options.Button;
 import me.elfrodo.majnruj.client.gui.screen.widget.BooleanButton;
 
-import java.util.ArrayList;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.network.chat.CommonComponents;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 
 public class OptionsScreen extends AbstractScreen {
     public final static MutableComponent MOBS_BTN = Component.translatable("majnrujclient.options.mobs");
@@ -33,6 +35,11 @@ public class OptionsScreen extends AbstractScreen {
             MajnrujClient.instance().updateTitle();
         })));*/
         this.options.add(new Button(this.centerX + 10, 50, 150, 20, MOBS_BTN, button -> openScreen(new MobsScreen(this))));
+        // MAJNRUJ Client - Start
+        this.options.add(new BooleanButton(this.centerX - 160, 80, 150, 20, new BooleanOption("send-telemetry", () -> config.sendTelemetry, (value) -> config.sendTelemetry = value)));
+        this.options.add(new BooleanButton(this.centerX + 10, 80, 150, 20, new BooleanOption("send-periodic-telemetry", () -> config.sendPeriodicTelemetry, (value) -> config.sendPeriodicTelemetry = value)));
+        this.options.add(new BooleanButton(this.centerX - 160, 110, 150, 20, new BooleanOption("use-discord-rich-pressence", () -> config.useDiscordRichPressence, (value) -> config.useDiscordRichPressence = value)));
+        // MAJNRUJ Client - End
         this.options.add(net.minecraft.client.gui.components.Button.builder(CommonComponents.GUI_DONE, (button) -> onClose()).bounds(this.centerX - 100, 150, 200, 20).build());
 
         this.options.forEach(this::addRenderableWidget);

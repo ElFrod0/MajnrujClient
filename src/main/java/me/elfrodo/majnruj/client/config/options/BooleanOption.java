@@ -1,9 +1,11 @@
 package me.elfrodo.majnruj.client.config.options;
 
-import java.util.List;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.FormattedCharSequence;
+
+import java.util.List;
 
 public class BooleanOption implements Option<Boolean> {
     private final String key;
@@ -15,8 +17,9 @@ public class BooleanOption implements Option<Boolean> {
     private final Component off;
 
     public BooleanOption(String key, Getter getter, Setter setter) {
+        Minecraft minecraft = Minecraft.getInstance();
         this.key = "majnrujclient.options." + key;
-        this.tooltip = Minecraft.getInstance().font.split(Component.translatable(this.key + ".tooltip"), 170);
+        this.tooltip = minecraft.font.split(Component.translatable(this.key + ".tooltip"), 170);
         this.on = Component.translatable("majnrujclient.options.on", Component.translatable(this.key));
         this.off = Component.translatable("majnrujclient.options.off", Component.translatable(this.key));
         this.getter = getter;
@@ -24,7 +27,6 @@ public class BooleanOption implements Option<Boolean> {
     }
 
     @Override
-    @SuppressWarnings("unused")
     public String key() {
         return this.key;
     }

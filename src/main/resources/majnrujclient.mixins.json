@@ -11,7 +11,7 @@
   "mixins": [
     "MixinGameMenuScreen",
     "compat.modmenu.MixinModMenuEventHandler",
-    
+    "MixinClientBrand",
     "MixinDebugScreenOverlay",
     "MixinEnchantmentHelper",
     "MixinItemStack",

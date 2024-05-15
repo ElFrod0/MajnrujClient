@@ -1,11 +1,13 @@
 package me.elfrodo.majnruj.client.gui.screen;
 
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.Screen;
+
+import java.util.ArrayList;
+
 import me.elfrodo.majnruj.client.entity.Mob;
 import me.elfrodo.majnruj.client.gui.screen.widget.MobButton;
 
-import java.util.ArrayList;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.screens.Screen;
 
 public class MobsScreen extends AbstractScreen {
     public MobsScreen(Screen parent) {

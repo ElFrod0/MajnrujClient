@@ -1,6 +1,5 @@
 package me.elfrodo.majnruj.client.network;
 
-import com.google.common.io.ByteArrayDataOutput;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
@@ -8,6 +7,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.block.BeehiveBlock;
 import net.minecraft.world.level.block.state.BlockState;
+
+import com.google.common.io.ByteArrayDataOutput;
+
 import me.elfrodo.majnruj.client.util.Constants;
 
 public class BeehivePacket {
@@ -19,7 +21,6 @@ public class BeehivePacket {
         Packet.send(Constants.BEEHIVE_C2S, out);
     }
 
-    @SuppressWarnings("unused")
     public static void receiveBeehiveData(Minecraft client, ClientPacketListener handler, FriendlyByteBuf buf, PacketSender sender) {
         if (client.level == null) {
             return;

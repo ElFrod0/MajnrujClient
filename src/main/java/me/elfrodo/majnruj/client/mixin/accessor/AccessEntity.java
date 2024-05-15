@@ -1,6 +1,7 @@
 package me.elfrodo.majnruj.client.mixin.accessor;
 
 import net.minecraft.world.entity.Entity;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 

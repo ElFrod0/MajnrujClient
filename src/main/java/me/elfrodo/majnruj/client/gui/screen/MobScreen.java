@@ -4,20 +4,6 @@ import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import org.joml.Quaternionf;
-import me.elfrodo.majnruj.client.MajnrujClient;
-import me.elfrodo.majnruj.client.config.options.DoubleOption;
-import me.elfrodo.majnruj.client.entity.Mob;
-import me.elfrodo.majnruj.client.entity.Seat;
-import me.elfrodo.majnruj.client.fake.FakePlayer;
-import me.elfrodo.majnruj.client.gui.screen.widget.DoubleButton;
-import me.elfrodo.majnruj.client.mixin.accessor.AccessAbstractPiglin;
-import me.elfrodo.majnruj.client.mixin.accessor.AccessEntity;
-import me.elfrodo.majnruj.client.mixin.accessor.AccessHoglin;
-import me.elfrodo.majnruj.client.mixin.accessor.AccessMagmaCube;
-import me.elfrodo.majnruj.client.mixin.accessor.AccessSlime;
-
-import java.util.ArrayList;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Renderable;
@@ -41,6 +27,21 @@ import net.minecraft.world.entity.monster.Strider;
 import net.minecraft.world.entity.monster.hoglin.Hoglin;
 import net.minecraft.world.entity.monster.piglin.AbstractPiglin;
 import net.minecraft.world.entity.monster.warden.Warden;
+
+import org.joml.Quaternionf;
+import java.util.ArrayList;
+
+import me.elfrodo.majnruj.client.MajnrujClient;
+import me.elfrodo.majnruj.client.config.options.DoubleOption;
+import me.elfrodo.majnruj.client.entity.Mob;
+import me.elfrodo.majnruj.client.entity.Seat;
+import me.elfrodo.majnruj.client.fake.FakePlayer;
+import me.elfrodo.majnruj.client.gui.screen.widget.DoubleButton;
+import me.elfrodo.majnruj.client.mixin.accessor.AccessAbstractPiglin;
+import me.elfrodo.majnruj.client.mixin.accessor.AccessEntity;
+import me.elfrodo.majnruj.client.mixin.accessor.AccessHoglin;
+import me.elfrodo.majnruj.client.mixin.accessor.AccessMagmaCube;
+import me.elfrodo.majnruj.client.mixin.accessor.AccessSlime;
 
 public class MobScreen extends AbstractScreen {
     private final Mob mob;

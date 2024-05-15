@@ -10,5 +10,11 @@ public class Config {
     //public boolean useSplashScreen = false;
     //public boolean useWindowTitle = true;
 
+    // MAJNRUJ Client - Start
+    public boolean sendTelemetry = true;
+    public boolean sendPeriodicTelemetry = true;
+    public boolean useDiscordRichPressence = true; // TODO: Not yet implemented
+    // MAJNRUJ Client - End
+
     public Seats seats = new Seats();
 }

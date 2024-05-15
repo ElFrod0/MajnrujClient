@@ -1,10 +1,10 @@
 package me.elfrodo.majnruj.client.config.options;
 
-import java.util.List;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.FormattedCharSequence;
 
-@SuppressWarnings("unused")
+import java.util.List;
+
 public interface Option<T> {
     String key();
 

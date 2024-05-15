@@ -10,16 +10,18 @@
 
 package me.elfrodo.majnruj.client.mixin;
 
-import me.elfrodo.majnruj.client.MajnrujClient;
-import me.elfrodo.majnruj.client.compat.Compat;
-import me.elfrodo.majnruj.client.gui.screen.widget.Text;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.network.chat.Component;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import me.elfrodo.majnruj.client.MajnrujClient;
+import me.elfrodo.majnruj.client.compat.Compat;
+import me.elfrodo.majnruj.client.gui.screen.widget.Text;
 
 @Mixin(TitleScreen.class)
 public class MixinTitleScreen extends Screen {

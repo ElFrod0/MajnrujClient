@@ -4,6 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
+
 import me.elfrodo.majnruj.client.config.options.BooleanOption;
 
 public class BooleanButton extends Button implements Tickable {
@@ -16,8 +17,9 @@ public class BooleanButton extends Button implements Tickable {
     }
 
     public void renderTooltip(GuiGraphics context, int mouseX, int mouseY) {
-        if (this.isHovered && this.tooltipDelay > 15 && Minecraft.getInstance().screen != null) {
-            context.renderTooltip(Minecraft.getInstance().font, this.option.tooltip(), mouseX, mouseY);
+        Minecraft minecraft = Minecraft.getInstance();
+        if (this.isHovered && this.tooltipDelay > 15 && minecraft.screen != null) {
+            context.renderTooltip(minecraft.font, this.option.tooltip(), mouseX, mouseY);
         }
     }
 

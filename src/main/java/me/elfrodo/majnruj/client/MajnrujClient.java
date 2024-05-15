@@ -10,39 +10,55 @@
 
 package me.elfrodo.majnruj.client;
 
-import com.google.common.io.ByteArrayDataOutput;
 import com.mojang.blaze3d.platform.IconSet;
 import com.mojang.blaze3d.platform.Window;
+import net.minecraft.client.Minecraft;
+import net.minecraft.server.packs.VanillaPackResources;
+import net.minecraft.server.packs.resources.IoSupplier;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import com.google.common.io.ByteArrayDataOutput;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.minecraft.client.Minecraft;
-import net.minecraft.server.packs.VanillaPackResources;
-import net.minecraft.server.packs.resources.IoSupplier;
+
 import me.elfrodo.majnruj.client.config.Config;
 import me.elfrodo.majnruj.client.config.ConfigManager;
 import me.elfrodo.majnruj.client.config.CreditsConfig;
 import me.elfrodo.majnruj.client.network.BeehivePacket;
+import me.elfrodo.majnruj.client.network.MajnrujHandshakePacket;
 import me.elfrodo.majnruj.client.network.Packet;
 import me.elfrodo.majnruj.client.util.Constants;
+import me.elfrodo.majnruj.client.util.ComputerInformationGetters;
+import me.elfrodo.majnruj.client.util.ClientInformationGetters;
+import me.elfrodo.majnruj.client.util.ChecksumUtil;
 import me.elfrodo.majnruj.client.api.CreditsAPI;
+import me.elfrodo.majnruj.client.util.TimedTelemetryUtil;
 
 public class MajnrujClient implements ClientModInitializer {
-    private static MajnrujClient instance;
-
     // MAJNRUJ Client - Start
+    private static MajnrujClient instance;
+    private static Logger logger = LogManager.getLogger();
     private boolean titleTextChosen = false;
     private String titleRandomText;
     private final CreditsConfig creditsConfig;
+    public static boolean isConnectedToMajnrujServer = false;
+
+    private ComputerInformationGetters pcInfo = new ComputerInformationGetters();
+    private ClientInformationGetters clientInfo = new ClientInformationGetters();
+    private ChecksumUtil checksumUtil = new ChecksumUtil();
+    private TimedTelemetryUtil periodicTelemetry = new TimedTelemetryUtil();
     // MAJNRUJ Client - End
 
+    // PURPUR Client - Start
     public static MajnrujClient instance() {
         return instance;
     }
@@ -55,8 +71,9 @@ public class MajnrujClient implements ClientModInitializer {
         instance = this;
 
         this.configManager = new ConfigManager();
-        this.creditsConfig = new CreditsConfig();
+        this.creditsConfig = new CreditsConfig(); // MAJNRUJ Client
     }
+    // PURPUR Client - End 
 
     @Override
     public void onInitializeClient() {
@@ -81,30 +98,42 @@ public class MajnrujClient implements ClientModInitializer {
                 creditsConfig.PAUSE_MENU.getBottomRight().addAll(api.getTitleScreenBottomRight());
             }
         }
+
+        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
+            if (isConnectedToMajnrujServer) {
+                periodicTelemetry.cancel();
+            }
+            isConnectedToMajnrujServer = false;
+        });
         // MAJNRUJ Client - End
 
-        if (this.configManager.getConfig() == null) {
-            new IllegalStateException("Could not load majnrujclient configuration").printStackTrace();
-            return;
-        }
-
+        // PURPUR Client - Start
         ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
             BeehivePacket.numOfBees = null;
             if (!client.isLocalServer()) {
                 ByteArrayDataOutput out = Packet.out();
                 out.writeInt(Constants.PROTOCOL);
                 Packet.send(Constants.HELLO, out);
+                Packet.send(Constants.MAJNRUJ_HELLO, out); // MAJNRUJ Client
             }
         });
 
         ClientPlayNetworking.registerGlobalReceiver(Constants.BEEHIVE_S2C, BeehivePacket::receiveBeehiveData);
+        ClientPlayNetworking.registerGlobalReceiver(Constants.MAJNRUJ_HANDSHAKE_S2C, MajnrujHandshakePacket::receive);
+
+        if (this.configManager.getConfig() == null) {
+            new IllegalStateException("Could not load MAJNRUJ Client configuration").printStackTrace();
+            return;
+        }
 
         /*if (getConfig().useWindowTitle) {
             Minecraft.getInstance().execute(this::updateTitle);
         }*/
         Minecraft.getInstance().execute(this::updateTitle);
+        // PURPUR Client - End
     }
 
+    // PURPUR Client - Start
     public Config getConfig() {
         return this.configManager.getConfig();
     }
@@ -112,6 +141,7 @@ public class MajnrujClient implements ClientModInitializer {
     public ConfigManager getConfigManager() {
         return this.configManager;
     }
+    // PURPUR Client - End
 
     // MAJNRUJ Client - Start
     public String getTitleText() {
@@ -152,7 +182,25 @@ public class MajnrujClient implements ClientModInitializer {
     public CreditsConfig getCreditsConfig() {
         return creditsConfig;
     }
+
+    public ClientInformationGetters getClientInfoGetters() {
+        return clientInfo;
+    }
+
+    public ComputerInformationGetters getComputerInfoGetters() {
+        return pcInfo;
+    }
+
+    public ChecksumUtil getChecksumUtil() {
+        return checksumUtil;
+    }
+
+    public Logger getLogger() {
+        return logger;
+    }
     // MAJNRUJ Client - End
+
+    // PURPUR Client - Start
     public void updateTitle() {
         Minecraft client = Minecraft.getInstance();
         Window window = client.getWindow();
@@ -164,4 +212,5 @@ public class MajnrujClient implements ClientModInitializer {
             // ignore
         };
     }
+    // PURPUR Client - End
 }

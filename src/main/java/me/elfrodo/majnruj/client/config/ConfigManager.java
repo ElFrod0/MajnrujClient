@@ -2,12 +2,13 @@ package me.elfrodo.majnruj.client.config;
 
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.io.IOException;
+import java.nio.file.Path;
+
 import net.fabricmc.loader.api.FabricLoader;
 import org.spongepowered.configurate.CommentedConfigurationNode;
 import org.spongepowered.configurate.hocon.HoconConfigurationLoader;
 
-import java.io.IOException;
-import java.nio.file.Path;
 
 public class ConfigManager {
     private Path configFile;

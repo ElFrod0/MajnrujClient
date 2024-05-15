@@ -46,12 +46,13 @@ dependencies {
     include("com.google.guava:guava:31.1-jre")
     include("com.typesafe:config:1.4.2")
     include("io.leangen.geantyref:geantyref:1.3.12")
+    implementation ("com.github.oshi:oshi-core:5.7.4")
 
     // compatibility
     modImplementation("com.terraformersmc:modmenu:6.2.0")
     modCompileOnly("curse.maven:minimal-menu-405795:3826009")
     modImplementation("curse.maven:minimal-menu-405795:3826009")
-    modRuntimeOnly("net.fabricmc.fabric-api:fabric-api:0.78.0+1.19.4")
+    //modRuntimeOnly("net.fabricmc.fabric-api:fabric-api:0.78.0+1.19.4")
 }
 
 processResources {

@@ -1,18 +1,6 @@
 package me.elfrodo.majnruj.client.mixin;
 
 //import com.mojang.blaze3d.systems.RenderSystem;
-//import me.elfrodo.majnruj.client.MajnrujClient;
-import me.elfrodo.majnruj.client.gui.SplashTexture;
-import org.spongepowered.asm.mixin.Final;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import java.util.Optional;
-import java.util.function.Consumer;
 //import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -21,6 +9,20 @@ import net.minecraft.client.gui.screens.LoadingOverlay;
 import net.minecraft.server.packs.resources.ReloadInstance;
 import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
+
+import java.util.Optional;
+import java.util.function.Consumer;
+
+import org.spongepowered.asm.mixin.Final;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import me.elfrodo.majnruj.client.gui.SplashTexture;
+//import me.elfrodo.majnruj.client.MajnrujClient;
 
 @Mixin(LoadingOverlay.class)
 public class MixinLoadingOverlay {

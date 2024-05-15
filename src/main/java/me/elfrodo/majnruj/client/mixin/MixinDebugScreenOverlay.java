@@ -7,8 +7,9 @@ import net.minecraft.world.level.block.BeehiveBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
-import me.elfrodo.majnruj.client.MajnrujClient;
-import me.elfrodo.majnruj.client.network.BeehivePacket;
+
+import java.util.List;
+
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -16,7 +17,9 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-import java.util.List;
+import me.elfrodo.majnruj.client.MajnrujClient;
+import me.elfrodo.majnruj.client.network.BeehivePacket;
+
 
 @Mixin(DebugScreenOverlay.class)
 public class MixinDebugScreenOverlay {

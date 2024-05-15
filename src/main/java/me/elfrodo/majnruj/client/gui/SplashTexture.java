@@ -1,13 +1,15 @@
 package me.elfrodo.majnruj.client.gui;
 
-import me.elfrodo.majnruj.client.MajnrujClient;
 import com.mojang.blaze3d.platform.NativeImage;
-import java.io.IOException;
-import java.io.InputStream;
 import net.minecraft.client.renderer.texture.SimpleTexture;
 import net.minecraft.client.resources.metadata.texture.TextureMetadataSection;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
+
+import java.io.IOException;
+import java.io.InputStream;
+
+import me.elfrodo.majnruj.client.MajnrujClient;
 
 public class SplashTexture extends SimpleTexture {
     public static final ResourceLocation SPLASH = new ResourceLocation("majnrujclient", "textures/splash.png");

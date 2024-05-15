@@ -10,6 +10,7 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+
 import me.elfrodo.majnruj.client.config.options.DoubleOption;
 
 public class DoubleButton extends AbstractWidget implements Tickable {
@@ -49,7 +50,8 @@ public class DoubleButton extends AbstractWidget implements Tickable {
         drawButton(context, MINUS, this.getX(), this.btn == Btn.MINUS || this.selected == Btn.MINUS);
         drawButton(context, PLUS, this.getX() + this.width - this.height, this.btn == Btn.PLUS || this.selected == Btn.PLUS);
 
-        context.drawCenteredString(Minecraft.getInstance().font, this.getMessage(), this.getX() + this.width / 2, this.getY() + (this.height - 8) / 2, (this.active ? 0xFFFFFF : 0xA0A0A0) | Mth.ceil(this.alpha * 255.0f) << 24);
+        Minecraft minecraft = Minecraft.getInstance();
+        context.drawCenteredString(minecraft.font, this.getMessage(), this.getX() + this.width / 2, this.getY() + (this.height - 8) / 2, (this.active ? 0xFFFFFF : 0xA0A0A0) | Mth.ceil(this.alpha * 255.0f) << 24);
 
         if (this.isHovered) {
             this.renderTooltip(context, mouseX, mouseY);
@@ -61,7 +63,8 @@ public class DoubleButton extends AbstractWidget implements Tickable {
         context.setColor(1.0F, 1.0F, 1.0F, this.alpha);
         RenderSystem.enableBlend();
         context.blitSprite(TEXTURES.get(this.active, i), x, this.getY(), this.height, this.height);
-        context.drawCenteredString(Minecraft.getInstance().font, text, x + this.height / 2, this.getY() + (this.height - 8) / 2, (this.active ? 0xFFFFFF : 0xA0A0A0) | Mth.ceil(this.alpha * 255.0f) << 24);
+        Minecraft minecraft = Minecraft.getInstance();
+        context.drawCenteredString(minecraft.font, text, x + this.height / 2, this.getY() + (this.height - 8) / 2, (this.active ? 0xFFFFFF : 0xA0A0A0) | Mth.ceil(this.alpha * 255.0f) << 24);
     }
 
     @Override
@@ -96,11 +99,12 @@ public class DoubleButton extends AbstractWidget implements Tickable {
     }
 
     public void renderTooltip(GuiGraphics context, int mouseX, int mouseY) {
-        if (this.tooltipDelay > 15 && Minecraft.getInstance().screen != null) {
+        Minecraft minecraft = Minecraft.getInstance();
+        if (this.tooltipDelay > 15 && minecraft.screen != null) {
             PoseStack matrices = context.pose();
             matrices.pushPose();
             matrices.translate(0, 0, -399);
-            context.renderTooltip(Minecraft.getInstance().font, this.option.tooltip(), mouseX, mouseY);
+            context.renderTooltip(minecraft.font, this.option.tooltip(), mouseX, mouseY);
             matrices.popPose();
         }
     }

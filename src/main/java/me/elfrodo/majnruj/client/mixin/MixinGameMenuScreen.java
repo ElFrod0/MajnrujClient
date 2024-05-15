@@ -10,15 +10,17 @@
 
 package me.elfrodo.majnruj.client.mixin;
 
-import me.elfrodo.majnruj.client.MajnrujClient;
-import me.elfrodo.majnruj.client.gui.screen.widget.Text;
 import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import me.elfrodo.majnruj.client.MajnrujClient;
+import me.elfrodo.majnruj.client.gui.screen.widget.Text;
 
 @Mixin(PauseScreen.class)
 public class MixinGameMenuScreen extends Screen {

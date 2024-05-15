@@ -1,10 +1,16 @@
 {
-  "majnrujclient.options.title": "Majnruj Client Options",
+  "majnrujclient.options.title": "MAJNRUJ Client Options",
 
   "majnrujclient.options.fix-chat-stutter": "Async Chat",
   "majnrujclient.options.fix-chat-stutter.tooltip": "Enabling will process chat on another thread so it doesn't clog up the render thread",
   "majnrujclient.options.bee-count-in-debug": "Bee Counts",
   "majnrujclient.options.bee-count-in-debug.tooltip": "Enabling will add bee counts in the debug screen (F3) when looking at bee hives and nests",
+  "majnrujclient.options.send-telemetry": "Send Telemetry",
+  "majnrujclient.options.send-telemetry.tooltip": "Enabling will send telemetry data to mCore-based servers. This is used to help us improve the client",
+  "majnrujclient.options.send-periodic-telemetry": "Send Periodic Telemetry",
+  "majnrujclient.options.send-periodic-telemetry.tooltip": "Enabling will keep sending periodic telemetry data to mCore-based servers. This is used to help us improve the client",
+  "majnrujclient.options.use-discord-rich-pressence": "Discord Rich Pressence",
+  "majnrujclient.options.use-discord-rich-pressence.tooltip": "Enabling will use Discord Rich Pressence to make your Discord profile look even better",
   "majnrujclient.options.splash-screen": "Splash Screen",
   "majnrujclient.options.splash-screen.tooltip": "Enabling will use Majnruj's splash screen instead of Mojang's",
   "majnrujclient.options.window-title": "Window Title",

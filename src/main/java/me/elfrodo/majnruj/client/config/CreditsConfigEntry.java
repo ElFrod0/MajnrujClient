@@ -10,10 +10,10 @@
 
 package me.elfrodo.majnruj.client.config;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import net.minecraft.network.chat.Component;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import java.util.ArrayList;
 import java.util.List;
 

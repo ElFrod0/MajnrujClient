@@ -10,16 +10,18 @@
 
 package me.elfrodo.majnruj.client.mixin.compat.modmenu;
 
-import com.terraformersmc.modmenu.event.ModMenuEventHandler;
-import me.elfrodo.majnruj.client.gui.screen.widget.Text;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.layouts.LayoutElement;
+
+import com.terraformersmc.modmenu.event.ModMenuEventHandler;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Pseudo;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Surrogate;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import me.elfrodo.majnruj.client.gui.screen.widget.Text;
 
 @Pseudo
 @Mixin(value = ModMenuEventHandler.class)
