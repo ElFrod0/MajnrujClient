@@ -13,7 +13,7 @@ public class Config {
     // MAJNRUJ Client - Start
     public boolean sendTelemetry = true;
     public boolean sendPeriodicTelemetry = true;
-    public boolean useDiscordRichPressence = true; // TODO: Not yet implemented
+    public boolean useDiscordRichPresence = true;
     // MAJNRUJ Client - End
 
     public Seats seats = new Seats();

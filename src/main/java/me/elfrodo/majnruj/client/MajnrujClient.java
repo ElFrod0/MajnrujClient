@@ -15,6 +15,8 @@ import com.mojang.blaze3d.platform.Window;
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.packs.VanillaPackResources;
 import net.minecraft.server.packs.resources.IoSupplier;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.Level;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,18 +31,22 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 
+import me.elfrodo.majnruj.client.api.CreditsAPI;
 import me.elfrodo.majnruj.client.config.Config;
 import me.elfrodo.majnruj.client.config.ConfigManager;
 import me.elfrodo.majnruj.client.config.CreditsConfig;
+import me.elfrodo.majnruj.client.discordrpc.DiscordRP;
 import me.elfrodo.majnruj.client.network.BeehivePacket;
 import me.elfrodo.majnruj.client.network.MajnrujHandshakePacket;
+import me.elfrodo.majnruj.client.network.MajnrujRichPresencePacket;
 import me.elfrodo.majnruj.client.network.Packet;
 import me.elfrodo.majnruj.client.util.Constants;
 import me.elfrodo.majnruj.client.util.ComputerInformationGetters;
 import me.elfrodo.majnruj.client.util.ClientInformationGetters;
 import me.elfrodo.majnruj.client.util.ChecksumUtil;
-import me.elfrodo.majnruj.client.api.CreditsAPI;
 import me.elfrodo.majnruj.client.util.TimedTelemetryUtil;
 
 public class MajnrujClient implements ClientModInitializer {
@@ -51,6 +57,7 @@ public class MajnrujClient implements ClientModInitializer {
     private String titleRandomText;
     private final CreditsConfig creditsConfig;
     public static boolean isConnectedToMajnrujServer = false;
+    private static ResourceKey<Level> currentWorld;
 
     private ComputerInformationGetters pcInfo = new ComputerInformationGetters();
     private ClientInformationGetters clientInfo = new ClientInformationGetters();
@@ -80,6 +87,22 @@ public class MajnrujClient implements ClientModInitializer {
         // MAJNRUJ Client - Start
         creditsConfig.load();
 
+        // Discord Rich Presence
+        if (getConfig().useDiscordRichPresence) {
+            try {
+                DiscordRP.initialize();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            DiscordRP.start();
+            DiscordRP.waitForThread(); // Important! Wait for the thread to start!
+            DiscordRP.setMainMenu(); // Just to "overwrite" the initial data
+
+            ClientLifecycleEvents.CLIENT_STOPPING.register(client -> {
+                DiscordRP.stop();
+            });
+        }
+
         var entrypoint = FabricLoader.getInstance().getEntrypointContainers("credits", CreditsAPI.class);
         for (var container : entrypoint) {
             var api = container.getEntrypoint();
@@ -100,10 +123,30 @@ public class MajnrujClient implements ClientModInitializer {
         }
 
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
+            DiscordRP.setMainMenu();
             if (isConnectedToMajnrujServer) {
                 periodicTelemetry.cancel();
             }
             isConnectedToMajnrujServer = false;
+        });
+
+        // TODO: I will probably implement this sooner or later into MajnrujRichPresencePacket class.
+        // Not a big fan of calling something every single tick.
+        ClientTickEvents.END_WORLD_TICK.register(client -> {
+            if (!isConnectedToMajnrujServer || !DiscordRP.enabled) {
+                return;
+            }
+            ResourceKey<Level> dimensionRegistryKey = client.dimension();
+            if (dimensionRegistryKey != currentWorld) {
+                // Initializing the first world in client's lifetime means currentWorld is just null.
+                if (currentWorld == null) {
+                    getLogger().info("World entered: " + dimensionRegistryKey.toString());
+                } else {
+                    getLogger().info("World changed: " + currentWorld.toString() + " -> " + dimensionRegistryKey.toString());
+                }
+                currentWorld = dimensionRegistryKey;
+                DiscordRP.setMajnrujWorld(currentWorld.location());
+            }
         });
         // MAJNRUJ Client - End
 
@@ -114,12 +157,23 @@ public class MajnrujClient implements ClientModInitializer {
                 ByteArrayDataOutput out = Packet.out();
                 out.writeInt(Constants.PROTOCOL);
                 Packet.send(Constants.HELLO, out);
-                Packet.send(Constants.MAJNRUJ_HELLO, out); // MAJNRUJ Client
+                // PURPUR Client - End
+                // MAJNRUJ Client - Start
+                Packet.send(Constants.MAJNRUJ_HELLO, out);
+                DiscordRP.setMultiplayer();
             }
+            if (client.isSingleplayer()) {
+                DiscordRP.setSinglePlayer();
+            }
+            // MAJNRUJ Client - End
         });
 
-        ClientPlayNetworking.registerGlobalReceiver(Constants.BEEHIVE_S2C, BeehivePacket::receiveBeehiveData);
+        ClientPlayNetworking.registerGlobalReceiver(Constants.BEEHIVE_S2C, BeehivePacket::receiveBeehiveData); // PURPUR Client
+        // MAJNRUJ Client - Start
         ClientPlayNetworking.registerGlobalReceiver(Constants.MAJNRUJ_HANDSHAKE_S2C, MajnrujHandshakePacket::receive);
+        ClientPlayNetworking.registerGlobalReceiver(Constants.MAJNRUJ_RICH_PRESENCE_S2C, MajnrujRichPresencePacket::receive);
+        ClientPlayNetworking.registerGlobalReceiver(Constants.MAJNRUJ_RICH_PRESENCE_SLOTS_DATA_S2C, MajnrujRichPresencePacket::receivePlayers);
+        // MAJNRUJ Client - End
 
         if (this.configManager.getConfig() == null) {
             new IllegalStateException("Could not load MAJNRUJ Client configuration").printStackTrace();

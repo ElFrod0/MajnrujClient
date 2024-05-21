@@ -6,6 +6,7 @@ import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.FriendlyByteBuf;
 
 import java.util.List;
+import java.io.UnsupportedEncodingException;
 import java.util.Collection;
 import com.google.common.io.ByteArrayDataOutput;
 
@@ -55,13 +56,19 @@ public class MajnrujHandshakePacket {
     }
 
     public static void receive(Minecraft client, ClientPacketListener handler, FriendlyByteBuf buf, PacketSender sender) {
-        // FIXME: I must have messed up something in mCore (server-side). The buffer doesn't contain the 1 only string at the index 0, but it's on index 1 instead.
-        // I spent more time on this than I am willing to admit. I'll get back to you when I get a chance.
-        // As others say... If it works, it works. Don't touch it anymore. But I will... one day!
-        String message = buf.readUtf();
-        message = buf.readUtf();
-        instance.getLogger().info(message);
-        instance.getLogger().info("Connected to mCore-based server which is running version: " + message);
+        /* TODO: Improvement needed?
+         * Reading String or ByteArray from the buffer first makes it read the channel.
+         * So we have to read the channel first. No need to save it, it's going to fallback to default "minecraft:" anyways, because it's empty.
+         * More information here: https://wiki.vg/Protocol#Clientbound_Plugin_Message_.28play.29
+         */
+        buf.readResourceLocation();
+        byte[] bytes = buf.readByteArray();
+        try {
+            String message = new String(bytes, "UTF-8");
+            instance.getLogger().info("Connected to mCore-based server: " + message);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         MajnrujClient.isConnectedToMajnrujServer = true;
         send();
 

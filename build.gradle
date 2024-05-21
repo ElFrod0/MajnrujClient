@@ -17,6 +17,7 @@ version = project.minecraft_version + "-" + project.build_num
 group = project.maven_group
 
 repositories {
+    mavenLocal()
     maven {
         url = "https://maven.terraformersmc.com/"
     }
@@ -28,6 +29,9 @@ repositories {
         content {
             includeGroup "curse.maven"
         }
+    }
+    maven { 
+        url = "https://jitpack.io"
     }
     mavenCentral()
 }
@@ -46,13 +50,16 @@ dependencies {
     include("com.google.guava:guava:31.1-jre")
     include("com.typesafe:config:1.4.2")
     include("io.leangen.geantyref:geantyref:1.3.12")
-    implementation ("com.github.oshi:oshi-core:5.7.4")
+    implementation ("com.github.oshi:oshi-core:6.4.5")
 
     // compatibility
     modImplementation("com.terraformersmc:modmenu:6.2.0")
     modCompileOnly("curse.maven:minimal-menu-405795:3826009")
     modImplementation("curse.maven:minimal-menu-405795:3826009")
     //modRuntimeOnly("net.fabricmc.fabric-api:fabric-api:0.78.0+1.19.4")
+
+    // Discord Rich Presence
+    include(implementation("com.github.jncrmx:discord-game-sdk4j:0.5.5")) // This is from mavenLocal() -> https://github.com/JnCrMx/discord-game-sdk4j | Perhaps I should include this as a part of the repo.
 }
 
 processResources {

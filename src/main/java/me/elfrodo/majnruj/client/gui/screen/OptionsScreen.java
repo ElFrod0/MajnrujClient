@@ -6,11 +6,13 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
 import java.util.ArrayList;
+import java.io.IOException;
 
 import me.elfrodo.majnruj.client.MajnrujClient;
 import me.elfrodo.majnruj.client.config.Config;
 import me.elfrodo.majnruj.client.config.options.BooleanOption;
 import me.elfrodo.majnruj.client.config.options.Button;
+import me.elfrodo.majnruj.client.discordrpc.DiscordRP;
 import me.elfrodo.majnruj.client.gui.screen.widget.BooleanButton;
 
 
@@ -38,7 +40,20 @@ public class OptionsScreen extends AbstractScreen {
         // MAJNRUJ Client - Start
         this.options.add(new BooleanButton(this.centerX - 160, 80, 150, 20, new BooleanOption("send-telemetry", () -> config.sendTelemetry, (value) -> config.sendTelemetry = value)));
         this.options.add(new BooleanButton(this.centerX + 10, 80, 150, 20, new BooleanOption("send-periodic-telemetry", () -> config.sendPeriodicTelemetry, (value) -> config.sendPeriodicTelemetry = value)));
-        this.options.add(new BooleanButton(this.centerX - 160, 110, 150, 20, new BooleanOption("use-discord-rich-pressence", () -> config.useDiscordRichPressence, (value) -> config.useDiscordRichPressence = value)));
+        this.options.add(new BooleanButton(this.centerX - 160, 110, 150, 20, new BooleanOption("use-discord-rich-pressence", () -> config.useDiscordRichPresence, (value) -> { 
+            config.useDiscordRichPresence = value;
+            if (value == true) {
+                try {
+                    DiscordRP.initialize();
+                    DiscordRP.start();
+                    DiscordRP.waitForThread();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                DiscordRP.stop();
+            }
+        })));
         // MAJNRUJ Client - End
         this.options.add(net.minecraft.client.gui.components.Button.builder(CommonComponents.GUI_DONE, (button) -> onClose()).bounds(this.centerX - 100, 150, 200, 20).build());
 
