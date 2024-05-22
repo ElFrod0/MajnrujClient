@@ -28,7 +28,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 import com.google.common.io.ByteArrayDataOutput;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -59,8 +58,6 @@ public class MajnrujClient implements ClientModInitializer {
     // MAJNRUJ Client - Start
     private static MajnrujClient instance;
     private static Logger logger = LogManager.getLogger();
-    private boolean titleTextChosen = false;
-    private String titleRandomText;
     private final CreditsConfig creditsConfig;
     public static boolean isConnectedToMajnrujServer = false;
     private static ResourceKey<Level> currentWorld;
@@ -220,41 +217,6 @@ public class MajnrujClient implements ClientModInitializer {
     // PURPUR Client - End
 
     // MAJNRUJ Client - Start
-    public String getTitleText() {
-        if (!titleTextChosen) {
-            List<String> strings = Arrays.asList(
-                "/m code majnruj-client-enjoyer",
-                "2444666668888888",
-                "První poutník stále žije!",
-                "Herobrine?",
-                "Šest jevů Goldsteinů",
-                "Heimdallr viděl co jsi provedl!",
-                "Nyní i bez cukru!",
-                "Powered by HHC-P",
-                "Hamburger Cheeseburger Big Mac Whopper",
-                "Zase práce? Tak já teda jdu.",
-                "Samvěd Křepelka je ten hrdina!",
-                "9. Opakování je zde.",
-                "Hlavní pravidlo nemluvit o...",
-                "Cítíte zlou přítomnost, která vás sleduje...",
-                "Jsou to 3 dimenze, 4 aspekty moci a 9 světů?",
-                "Nebo 22 dimenzí, 6 aspektů moci a nespočet světů?",
-                "A nebo 29 dimenzí, nespočet aspektů moci a nespočet světů?",
-                "Chvála slunci!",
-                "HLUK = SMÍCH",
-                "1 dřevo =/= 85.33 tlačítek",
-                "¯\\_(ツ)_/¯",
-                "Hipopotomonstroseskvipedaliofobie",
-                "I II II I_",
-                "Řím nebyl postaven za jeden den.");
-            Random random = new Random();
-            titleRandomText = strings.get(random.nextInt(strings.size()));
-            titleTextChosen = true;
-            return titleRandomText;
-        }
-        return titleRandomText;
-    }
-
     public CreditsConfig getCreditsConfig() {
         return creditsConfig;
     }

@@ -13,8 +13,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import me.elfrodo.majnruj.client.MajnrujClient;
 import me.elfrodo.majnruj.client.util.Constants;
+import me.elfrodo.majnruj.client.util.TitleTextsUtil;
 
 @Mixin(Minecraft.class)
 public class MixinMinecraftClient {
@@ -35,9 +35,7 @@ public class MixinMinecraftClient {
         ClientPacketListener network = client.getConnection();
 
         //MAJNRUJ Client - Start
-        MajnrujClient instance = MajnrujClient.instance();
-        String randomString = instance.getTitleText();
-        sb.append(" - ").append(randomString);
+        sb.append(" - ").append(TitleTextsUtil.getTitleText());
         //MAJNRUJ Client - End
 
         if (network != null && network.getConnection().isConnected()) {

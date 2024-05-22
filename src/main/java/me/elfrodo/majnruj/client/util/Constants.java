@@ -5,8 +5,8 @@ import net.minecraft.resources.ResourceLocation;
 public class Constants {
     // MAJNRUJ Client - Start
     public static final String BRAND = "MAJNRUJ Client";
-    public static final String VERSION = "v1.3.2";
-    public static final String MODLIST_SHA256_CHECKSUM = "4b3c9b42a333d73e85d0be971847c697cb29072b6d999243fdd81688ef00d62c"; // v1.3.2 expected SHA-256 checksum
+    public static final String VERSION = "v1.3.3";
+    public static final String MODLIST_SHA256_CHECKSUM = "7f447c0654f7bf08adb85286c2ecd6982c68000e3f51bc297c5cdd550d232d42"; // v1.3.3 expected SHA-256 checksum
     public static final int PERIODIC_TELEMETRY_STARTUP_DELAY = 10_000; // 10 seconds
     public static final int PERIODIC_TELEMETRY_PERIOD = 900_000; // 15 minutes
     public static final int PERIODIC_TELEMETRY_SHORT_PERIOD = 5_000; // 5 seconds
