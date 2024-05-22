@@ -12,7 +12,13 @@ package me.elfrodo.majnruj.client;
 
 import com.mojang.blaze3d.platform.IconSet;
 import com.mojang.blaze3d.platform.Window;
+
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
 import net.minecraft.server.packs.VanillaPackResources;
 import net.minecraft.server.packs.resources.IoSupplier;
 import net.minecraft.resources.ResourceKey;
@@ -96,12 +102,28 @@ public class MajnrujClient implements ClientModInitializer {
             }
             DiscordRP.start();
             DiscordRP.waitForThread(); // Important! Wait for the thread to start!
-            DiscordRP.setMainMenu(); // Just to "overwrite" the initial data
+            if (DiscordRP.running) { // Be sure it's actually running.
+                DiscordRP.setMainMenu(); // Just to "overwrite" the initial data
+            }
 
             ClientLifecycleEvents.CLIENT_STOPPING.register(client -> {
                 DiscordRP.stop();
             });
         }
+
+        Style whiteStyle = Style.EMPTY.withColor(ChatFormatting.WHITE);
+        Style blueStyle = Style.EMPTY.withColor(ChatFormatting.AQUA);
+        ClickEvent webClickEvent = new ClickEvent(ClickEvent.Action.OPEN_URL, Constants.MAJNRUJ_WEB_URL);
+        ClickEvent discordClickEvent = new ClickEvent(ClickEvent.Action.OPEN_URL, Constants.MAJNRUJ_DISCORD_URL);
+
+        Component component = Component.literal("MAJNRUJ Client " + Constants.VERSION).withStyle(whiteStyle.withClickEvent(webClickEvent));
+        creditsConfig.MAIN_MENU.getBottomLeft().add(0, component);
+        creditsConfig.PAUSE_MENU.getBottomLeft().add(0, component);
+        MutableComponent text1 = Component.literal("Připoj se na ").setStyle(whiteStyle.withClickEvent(discordClickEvent));
+        MutableComponent text2 = Component.literal("Discord").setStyle(blueStyle.withClickEvent(discordClickEvent));
+        MutableComponent combined = text1.append(text2);
+        creditsConfig.MAIN_MENU.getBottomLeft().add(1, combined);
+        creditsConfig.PAUSE_MENU.getBottomLeft().add(1, combined);
 
         var entrypoint = FabricLoader.getInstance().getEntrypointContainers("credits", CreditsAPI.class);
         for (var container : entrypoint) {

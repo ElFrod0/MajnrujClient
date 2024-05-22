@@ -12,6 +12,8 @@ public class Constants {
     public static final int PERIODIC_TELEMETRY_SHORT_PERIOD = 5_000; // 5 seconds
     public static final long DISCORD_APP_ID = 1239969267936530494L;
     public static final String DISCORD_RP_LOGO_KEY = "logo";
+    public static final String MAJNRUJ_DISCORD_URL = "https://discord.gg/K8Tt5F5STH";
+    public static final String MAJNRUJ_WEB_URL = "https://majnruj.cz/";
     public static final String MAJNRUJ_SERVER_IP = "play.majnruj.cz";
     // MAJNRUJ Client - End
     // PURPUR Client - Start

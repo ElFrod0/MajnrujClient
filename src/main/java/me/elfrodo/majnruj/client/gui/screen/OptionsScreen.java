@@ -1,5 +1,6 @@
 package me.elfrodo.majnruj.client.gui.screen;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
@@ -17,7 +18,9 @@ import me.elfrodo.majnruj.client.gui.screen.widget.BooleanButton;
 
 
 public class OptionsScreen extends AbstractScreen {
-    public final static MutableComponent MOBS_BTN = Component.translatable("majnrujclient.options.mobs");
+    public static final MutableComponent MOBS_BTN = Component.translatable("majnrujclient.options.mobs");
+    private static MajnrujClient instance = MajnrujClient.instance(); // MAJNRUJ Client
+    private static boolean alreadyInformed = false;
 
     public OptionsScreen(Screen parent) {
         super(parent);
@@ -43,6 +46,11 @@ public class OptionsScreen extends AbstractScreen {
         this.options.add(new BooleanButton(this.centerX - 160, 110, 150, 20, new BooleanOption("use-discord-rich-pressence", () -> config.useDiscordRichPresence, (value) -> { 
             config.useDiscordRichPresence = value;
             if (value == true) {
+                if (!alreadyInformed) {
+                    instance.getCreditsConfig().MAIN_MENU.addTopLeft("Client restart recommended for Rich Presence's full functionality!", ChatFormatting.RED, null);
+                    instance.getCreditsConfig().PAUSE_MENU.addTopLeft("Client restart recommended for Rich Presence's full functionality!", ChatFormatting.RED, null);
+                    alreadyInformed = true;
+                }
                 try {
                     DiscordRP.initialize();
                     DiscordRP.start();

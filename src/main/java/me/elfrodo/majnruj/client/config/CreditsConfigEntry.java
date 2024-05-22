@@ -10,12 +10,18 @@
 
 package me.elfrodo.majnruj.client.config;
 
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextColor;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.jetbrains.annotations.Nullable;
 
 public class CreditsConfigEntry {
     private final String key;
@@ -91,5 +97,33 @@ public class CreditsConfigEntry {
 
     public List<String> getModBlacklist() {
         return modBlacklist;
+    }
+
+    private Component createComponent(String text, ChatFormatting color, String url) {
+        Style style = Style.EMPTY.withColor(TextColor.fromLegacyFormat(color));
+        if (url != null && !url.isEmpty()) {
+            style = style.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, url));
+        }
+        return Component.literal(text).setStyle(style);
+    }
+
+    public void addTopLeft(String text, ChatFormatting color, @Nullable String url) {
+        topLeft.add(createComponent(text, color, url));
+    }
+
+    public void addTopLeft(Component component) {
+        topLeft.add(component);
+    }
+
+    public void addTopRight(String text, ChatFormatting color, @Nullable String url) {
+        topRight.add(createComponent(text, color, url));
+    }
+
+    public void addBottomLeft(String text, ChatFormatting color, @Nullable String url) {  
+        bottomLeft.add(createComponent(text, color, url));
+    }
+
+    public void addBottomRight(String text, ChatFormatting color, @Nullable String url) {
+        bottomRight.add(createComponent(text, color, url));
     }
 }

@@ -1,5 +1,6 @@
 package me.elfrodo.majnruj.client.discordrpc;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.resources.ResourceLocation;
 
 import java.io.IOException;
@@ -59,7 +60,16 @@ public class DiscordRP {
             params.setClientID(Constants.DISCORD_APP_ID);
             params.setFlags(CreateParams.getDefaultFlags());
 
-            core = new Core(params);
+            try {
+                core = new Core(params);
+            } catch (RuntimeException e) {
+                instance.getLogger().error("Discord RPC could not be initialized. Is Discord running? In case you don't use Discord, please disable it in configuration (/minecraft/config/majnrujclient.json). Be sure to reboot the game afterwards! If Discord is actually running, please report this error.", e);
+                running = false;
+                setThreadStarted(true); // Main Thread is waiting for this. This actually makes the game boot up with Discord disabled.
+                applyErrorOnScreen("Discord app not turned on!"); // Not everyone is checking logs, inform the user.
+                stop(); // Kill the thread now.
+                return;
+            }
             activity = new Activity();
             activity.assets().setLargeImage(Constants.DISCORD_RP_LOGO_KEY);
             //activity.assets().setSmallImage(key);
@@ -77,6 +87,7 @@ public class DiscordRP {
             core.activityManager().updateActivity(activity);
             setCore(core);
             setThreadStarted(true);
+            applyIDOnScreen(core.userManager().getCurrentUser().getUsername() + "#" + core.userManager().getCurrentUser().getDiscriminator());
             instance.getLogger().info("Discord RPC initialized.");
             while(clientRunning && enabled) {
                 core.runCallbacks();
@@ -177,36 +188,55 @@ public class DiscordRP {
     public static void stop(boolean clientRunning) {
         instance.getLogger().info("Stopping Discord RPC...");
         DiscordRP.clientRunning = clientRunning;
-        core.close();
+        DiscordRP.running = false;
+        if (core != null) { // Can be null, if it fails to initialize.
+            core.close();
+        }
         discordRPThread = null;
         instance.getLogger().info("Discord RPC stopped.");
     }
 
+    public static void applyIDOnScreen(String id) {
+        instance.getCreditsConfig().MAIN_MENU.addTopLeft("Discord RPC (User: " + id + ")", ChatFormatting.WHITE, null);
+        instance.getCreditsConfig().PAUSE_MENU.addTopLeft(id, ChatFormatting.WHITE, null);
+    }
+
+    public static void applyErrorOnScreen(String error) {
+        instance.getCreditsConfig().MAIN_MENU.addTopLeft("Discord RPC Error: " + error, ChatFormatting.RED, null);
+        instance.getCreditsConfig().PAUSE_MENU.addTopLeft("Discord RPC Error: " + error, ChatFormatting.RED, null);
+    }
+
     public static void setMainMenu() {
-        activity.setDetails("Main Menu");
-        activity.setState("Idle");
-        activity.party().size().setCurrentSize(1);
-        activity.party().size().setMaxSize(1);
-        activity.timestamps().setStart(Instant.now());
-        update();
+        if (running) {
+            activity.setDetails("Main Menu");
+            activity.setState("Idle");
+            activity.party().size().setCurrentSize(1);
+            activity.party().size().setMaxSize(1);
+            activity.timestamps().setStart(Instant.now());
+            update();
+        }
     }
 
     public static void setSinglePlayer() {
-        activity.setDetails("Single Player");
-        activity.setState("Playing Solo");
-        activity.party().size().setCurrentSize(1);
-        activity.party().size().setMaxSize(1);
-        activity.timestamps().setStart(Instant.now());
-        update();
+        if (running) {
+            activity.setDetails("Single Player");
+            activity.setState("Playing Solo");
+            activity.party().size().setCurrentSize(1);
+            activity.party().size().setMaxSize(1);
+            activity.timestamps().setStart(Instant.now());
+            update();
+        }
     }
 
     public static void setMultiplayer() {
-        activity.setDetails("Multi Player");
-        activity.setState("Unknown Server");
-        activity.party().size().setCurrentSize(1);
-        activity.party().size().setMaxSize(65536);
-        activity.timestamps().setStart(Instant.now());
-        update();
+        if (running) {
+            activity.setDetails("Multi Player");
+            activity.setState("Unknown Server");
+            activity.party().size().setCurrentSize(1);
+            activity.party().size().setMaxSize(65536);
+            activity.timestamps().setStart(Instant.now());
+            update();
+        }
     }
 
     public static void setMajnrujServer() {
@@ -222,25 +252,29 @@ public class DiscordRP {
     }
 
     public static void setMajnrujServer(int players, int maxPlayers, boolean resetTimestamp, int playerLevel) {
-        DiscordRP.currentPlayers = players;
-        DiscordRP.maxPlayers = maxPlayers;
-        activity.setDetails("IP: " + Constants.MAJNRUJ_SERVER_IP);
-        activity.setState("Slots");
-        activity.party().size().setCurrentSize(players);
-        activity.party().size().setMaxSize(maxPlayers);
-        if (resetTimestamp) {
-            activity.timestamps().setStart(Instant.now());
+        if (running) {
+            DiscordRP.currentPlayers = players;
+            DiscordRP.maxPlayers = maxPlayers;
+            activity.setDetails("IP: " + Constants.MAJNRUJ_SERVER_IP);
+            activity.setState("Slots");
+            activity.party().size().setCurrentSize(players);
+            activity.party().size().setMaxSize(maxPlayers);
+            if (resetTimestamp) {
+                activity.timestamps().setStart(Instant.now());
+            }
+            update();
         }
-        update();
     }
 
     public static void setMajnrujWorld(ResourceLocation worldID) {
-        for (WorldsEnum world : WorldsEnum.values()) {
-            if (world.getID().equals(worldID.toString())) {
-                //instance.getLogger().info("Found suitable enum, changing activity with key: " + world.name());
-                activity.assets().setSmallImage(world.name());
-                update();
-                return;
+        if (running) {
+            for (WorldsEnum world : WorldsEnum.values()) {
+                if (world.getID().equals(worldID.toString())) {
+                    //instance.getLogger().info("Found suitable enum, changing activity with key: " + world.name());
+                    activity.assets().setSmallImage(world.name());
+                    update();
+                    return;
+                }
             }
         }
     }
