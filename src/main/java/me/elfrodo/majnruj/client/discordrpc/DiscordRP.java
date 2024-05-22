@@ -24,6 +24,7 @@ public class DiscordRP {
     public static String playerRace = "Human";
     public static int playerLevel = 1;
     public static boolean isVanished = false; // Admin tech
+    public static String currentWorld = "N/A";
     // Slots stuff
     public static int currentPlayers = 1; // This can never be 0! (Not factorial ZULUL)
     public static int maxPlayers = 1; // This can never be 0!
@@ -129,7 +130,12 @@ public class DiscordRP {
                 activity.setDetails(playerRace + " (Level: " + playerLevel + ")");
                 roll++;
                 break;
-            case 2: // Only the last case scenario will use method setMajnrujServer();
+            case 2:
+                if (currentWorld != "N/A") {
+                    activity.setDetails("Svět: " + currentWorld);
+                }
+                break;
+            case 3: // Only the last case scenario will use method setMajnrujServer();
                 if (instanceType != 0) {
                     activity.setDetails(instanceName);
                     activity.party().size().setCurrentSize(currentParty);
@@ -198,7 +204,7 @@ public class DiscordRP {
 
     public static void applyIDOnScreen(String id) {
         instance.getCreditsConfig().MAIN_MENU.addTopLeft("Discord RPC (User: " + id + ")", ChatFormatting.WHITE, null);
-        instance.getCreditsConfig().PAUSE_MENU.addTopLeft(id, ChatFormatting.WHITE, null);
+        instance.getCreditsConfig().PAUSE_MENU.addTopLeft("Discord RPC (User: " + id + ")", ChatFormatting.WHITE, null);
     }
 
     public static void applyErrorOnScreen(String error) {
@@ -271,7 +277,8 @@ public class DiscordRP {
             for (WorldsEnum world : WorldsEnum.values()) {
                 if (world.getID().equals(worldID.toString())) {
                     //instance.getLogger().info("Found suitable enum, changing activity with key: " + world.name());
-                    activity.assets().setSmallImage(world.name());
+                    activity.assets().setSmallImage(world.getKey());
+                    currentWorld = world.getName();
                     update();
                     return;
                 }

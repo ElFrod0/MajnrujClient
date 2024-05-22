@@ -66,7 +66,7 @@ public class MajnrujRichPresencePacket {
                         DiscordRP.initialize();
                         DiscordRP.waitForThread();
                         DiscordRP.start();
-                        DiscordRP.setMajnrujServer(); // We are still obviously connected, we can use the method which doesn't take any variables.
+                        DiscordRP.setMajnrujServer(); // We are still obviously connected, we can use the overloaded method which doesn't take any variables.
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
