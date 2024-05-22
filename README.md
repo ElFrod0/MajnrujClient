@@ -1,58 +1,71 @@
 <div align="center">
-<a href="https://purpurmc.org"><img src="https://user-images.githubusercontent.com/74448585/150906023-101cd383-da82-4a3c-9603-a3b5741c3994.png" alt="Purpur"></a>
+<a href="https://majnruj.cz/"><img src="https://github.com/ElFrod0/MajnrujClient/blob/master/.github/majnruj_client_logo.png?raw=true" alt="Purpur"></a>
 
-## PurpurClient
+## MAJNRUJ Client
 
-[![MIT License](https://img.shields.io/github/license/PurpurMC/PurpurClient?&logo=github)](LICENSE)
-[![Join us on Discord](https://img.shields.io/discord/685683385313919172.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://purpurmc.org/discord)
+[![MIT License](https://img.shields.io/github/license/ElFrod0/MajnrujClient?&logo=github)](LICENSE)
+[![Join us on Discord](https://img.shields.io/discord/792768473964740608.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://discord.gg/K8Tt5F5STH)
 
-[![PurpurClient's Stargazers](https://img.shields.io/github/stars/PurpurMC/PurpurClient?label=stars&logo=github)](https://github.com/PurpurMC/PurpurClient/stargazers)
-[![PurpurClient Forks](https://img.shields.io/github/forks/PurpurMC/PurpurClient?label=forks&logo=github)](https://github.com/PurpurMC/PurpurClient/network/members)
-[![PurpurClient Watchers](https://img.shields.io/github/watchers/PurpurMC/PurpurClient?label=watchers&logo=github)](https://github.com/PurpurMC/PurpurClient/watchers)
+MAJNRUJ Client (mClient in short) is a Fabric client mod, that is based on [PurpurClient](https://github.com/PurpurMC/PurpurClient). PurpurClient aims to fix various client-side bugs, while MAJNRUJ Client aims to provide new features. More on that below.
 
-PurpurClient is a Fabric client mod that aims to fix various client-side bugs in the game. A lot of these bugfixes end up in the vanilla game eventually, but for those who can't wait, this mod is for you.
+mClient is designed to work together with [Purpur](https://github.com/PurpurMC/Purpur) servers and mCore (Non open-source upstream of Purpur Server) servers. All the features are listed below. Keep in mind that most of the features can be used on any server type, but this mod is made especially to be used on mCore server(s).
 
-PurpurClient is designed to work together with [Purpur](https://github.com/PurpurMC/Purpur) servers (hence the name), but most features can still be used with any server type, as these are fixes to vanilla bugs that are not caused by Purpur itself.
-
+This Client mod is not expected to be run alone, but as part of slightly modified Fabulously Optimized modpack.
 </div>
 
 ### Current Features in 1.20.4:
+* Customizable mob passenger offsets.
+* Adds bee counts inside beehives to debug screen.¹
+* <s>Fancy Purpur-themed Loading Screen (can be disabled in the config)</s> <strong>Currently removed, will get "rebranded" soon.</strong>
+* Displays Custom Enchantments instead of stripping them from the client.
+* Removes the client-side limit of 255 levels.
+* Fancy Window Title with random texts similar to MC's splash texts or Terraria's window title texts.
+* Implementation of [@isXander's](https://github.com/isXander) mod [Main-Menu-Credits](https://github.com/isXander/main-menu-credits).
+* Telemetry & Periodic telemetry (More on that below)² 
+* Discord Rich Pressence using [@JnCrMx's](https://github.com/JnCrMx) [Discord-Game-SDK4J](https://github.com/JnCrMx/discord-game-sdk4j) Java bindings.³
 
-* Customizable mob passenger offsets
-* Adds bee counts inside beehives to debug screen¹
-* Fancy Purpur-themed Loading Screen (can be disabled in the config)
-* Fancy Window Title that changes based on what kind of server you're in ([translations can be PR'd](./src/main/resources/assets/purpurclient/lang/))
-* Displays Custom Enchantments instead of stripping them from the client
-* Removes the client-side limit of 255 levels
+¹ Only works when connected to [Purpur](https://github.com/PurpurMC/Purpur) servers.</br>
+² Only works when connected to mCore servers.</br>
+³ Works anywhere, but most features are available only when connected to mCore servers.
 
-¹ only works when connected to [Purpur](https://github.com/PurpurMC/Purpur) servers
-
-### Past Features (to get an idea of what this mod has done and will do in the future):
-
-* Asynchronous chat processing (removed since Mojang's new chat system is confusing)
-* Fix rain particles appearing under water [MC-131770](https://bugs.mojang.com/browse/MC-131770)
-* Fix sky darkening when riding minecart not on tracks [MC-51150](https://bugs.mojang.com/browse/MC-51150)
-* Fix chat stutter [MC-218167](https://bugs.mojang.com/browse/MC-218167)
-* Fix warnings in logs about invalid flying attributes [Purpur-744](https://github.com/PurpurMC/Purpur/pull/744)
-* Fix debug markers ignoring the blue and red values that are set [MC-234030](https://bugs.mojang.com/browse/MC-234030) (Shows as Unresolved even though it's been fixed)
-* Fix client preemptively removing item entities from the world (MC-???)
-
-Note: PurpurClient adds a fancy animated splash screen on game startup alongside a better window title message. Both of these can be disabled in the config if preferred.
-
+### Planned features
+* Automated login to skip authentication process via commands /login.
+* Better Discord RPC implementation to invite players, join their parties, etc.
+* Improved chat with multiple tabs - General Chat, Trade Chat, DMs, etc.
+* (Not exactly related) Public open-source release of simplified mCore as plugin to support mClient players.
+* Any ideas? Discord link below ;-)
 ## Contact
-[![Join us on Discord](https://img.shields.io/discord/685683385313919172.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://discord.gg/mtAAnkk)
+[![Join us on Discord](https://img.shields.io/discord/792768473964740608.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://discord.gg/K8Tt5F5STH)
 
-Join us on [Discord](https://purpurmc.org/discord)
+Join us on [Discord](https://discord.gg/K8Tt5F5STH).
 
-## Downloads
-[![Downloads](https://img.shields.io/modrinth/dt/purpurclient?color=00AF5C&label=modrinth&style=flat&logo=modrinth)](https://modrinth.com/mod/purpurclient/versions)
-
-Downloads can be obtained from our page on [Modrinth](https://modrinth.com/mod/purpurclient/versions).
+## Telemetry & Periodic Telemetry
+It can of course be disabled in the configuration.
+Telemetry is only sent when connected to mCore servers and data are sent through packets.</br>
+### List of contained data in telemetry packets:
+* Client's brand (eg. mClient v1.3)
+* Game Version (eg. 1.20.4)
+* Client modification status (boolean)
+* Mods information (Count, List, SHA256 ModList Checksum)
+* Resource Packs information (Count, List)
+* CPU (Model, # ofCores, # ofThreads, Architecture)
+* Currently used GPU
+* RAM (Total, Available (via -Xmx Java arg), Used)
+* Client's window resolution
+* Operating System & it's version/build.
+* Java Version
+* Render Distance
+* GUI Scale
+* Graphics settings
+* Chosen Language
+### Periodic Telemetry contains:
+* FPS (Limit, Lowest, Average, Highest)
+* RAM (Usage, Available Total)
+* Ping (Lowest, Average, Highest)
+<p>This kind of data can be used for recommending users to change their settings, swap to dedicated GPU instead of using iGPU, improving modpack, etc.
+<p>All data sent to mCore server may or may not be anonymized. We can check modlist for example, to see if you're trying to have unfair advantage or malicious intents.
 
 ## License
-[![MIT License](https://img.shields.io/github/license/PurpurMC/PurpurClient?&logo=github)](LICENSE)
+[![MIT License](https://img.shields.io/github/license/ElFrod0/MajnrujClient?&logo=github)](LICENSE)
 
-All code is licensed under the MIT license, unless otherwise noted.
-
-## Donate
-We accept donations via [GitHub Sponsors](https://github.com/sponsors/purpurmc) and the [OpenCollective](https://opencollective.com/purpurmc).
+All code is licensed under the MIT license, unless noted otherwise.
