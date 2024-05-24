@@ -1,0 +1,5 @@
+{
+    "providers": [
+		{"type": "bitmap","file": "minecraft:font/blank.png","ascent": 7,"height": 7,"chars": ["\uF8FF"]}
+    ]
+}

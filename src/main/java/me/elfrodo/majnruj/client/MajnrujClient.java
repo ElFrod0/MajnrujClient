@@ -34,12 +34,16 @@ import org.apache.logging.log4j.Logger;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 
 import me.elfrodo.majnruj.client.api.CreditsAPI;
+import me.elfrodo.majnruj.client.chat.ChatTabManager;
 import me.elfrodo.majnruj.client.config.Config;
 import me.elfrodo.majnruj.client.config.ConfigManager;
 import me.elfrodo.majnruj.client.config.CreditsConfig;
@@ -90,6 +94,12 @@ public class MajnrujClient implements ClientModInitializer {
         // MAJNRUJ Client - Start
         creditsConfig.load();
 
+        ModContainer modContainer = FabricLoader.getInstance().getModContainer(Constants.MOD_CONTAINER).orElseThrow();
+        ResourceManagerHelper.registerBuiltinResourcePack(
+            Constants.MAJNRUJ,
+            modContainer,
+            ResourcePackActivationType.ALWAYS_ENABLED
+        );
         // Discord Rich Presence
         if (getConfig().useDiscordRichPresence) {
             try {
@@ -171,6 +181,10 @@ public class MajnrujClient implements ClientModInitializer {
 
         // PURPUR Client - Start
         ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
+            if (getConfig().useBetterChat) {
+                ChatTabManager.clearMessages(); // Purge old messages
+                ChatTabManager.currentTab = ChatTabManager.defaultTab; // Set default tab
+            }
             BeehivePacket.numOfBees = null;
             if (!client.isLocalServer()) {
                 ByteArrayDataOutput out = Packet.out();

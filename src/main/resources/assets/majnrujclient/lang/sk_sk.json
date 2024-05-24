@@ -11,6 +11,8 @@
     "majnrujclient.options.send-periodic-telemetry.tooltip": "Enabling will keep sending periodic telemetry data to mCore-based servers. This is used to help us improve the client",
     "majnrujclient.options.use-discord-rich-pressence": "Discord Rich Pressence",
     "majnrujclient.options.use-discord-rich-pressence.tooltip": "Enabling will use Discord Rich Pressence to make your Discord profile look even better",
+    "majnrujclient.options.use-better-chat": "Use Better Chat",
+    "majnrujclient.options.use-better-chat.tooltip": "Enabling will use Majnruj's Better Chat instead of Mojang's",
     "majnrujclient.options.splash-screen": "Splash Screen",
     "majnrujclient.options.splash-screen.tooltip": "Enabling will use Majnruj's splash screen instead of Mojang's",
     "majnrujclient.options.window-title": "Window Title",

@@ -10,7 +10,7 @@ MAJNRUJ Client (mClient in short) is a Fabric client mod, that is based on [Purp
 
 mClient is designed to work together with [Purpur](https://github.com/PurpurMC/Purpur) servers and mCore (Non open-source upstream of Purpur Server) servers. All the features are listed below. Keep in mind that most of the features can be used on any server type, but this mod is made especially to be used on mCore server(s).
 
-This Client mod is not expected to be run alone, but as part of slightly modified Fabulously Optimized modpack.
+This Client mod is not expected to be run alone, but as part of slightly modified Fabulously Optimized modpack. Available here: **NOT YET**
 </div>
 
 ### Current Features in 1.20.4:
@@ -23,16 +23,28 @@ This Client mod is not expected to be run alone, but as part of slightly modifie
 * Implementation of [@isXander's](https://github.com/isXander) mod [Main-Menu-Credits](https://github.com/isXander/main-menu-credits).
 * Telemetry & Periodic telemetry (More on that below)² 
 * Discord Rich Pressence using [@JnCrMx's](https://github.com/JnCrMx) [Discord-Game-SDK4J](https://github.com/JnCrMx/discord-game-sdk4j) Java bindings.³
+* Improved chat with multiple tabs - General Chat, Trade Chat, DMs, etc. (**BETA!**) ³
+  * Current "Better Chat" features:
+    * Tabs for different chats.
+    * Markers if you have unread messages.
+    * Compact design linked seamlessly with Vanilla configuration.
+  * There will be more features later on. It just takes time to implement. You can expect:
+    * Direct Messages will have it's own tab for every player you talk with.
+    * More feedback features to know where you're writing.
+    * Longer history (> 100 messages) in each tab.
+    * RegEx capabilities + detailed configuration for supporting **NEARLY EVERY** server.
+    * Per-server pre-made configuration (via PRs soon).
+    * Intercepting Vanilla chat logging
 
 ¹ Only works when connected to [Purpur](https://github.com/PurpurMC/Purpur) servers.</br>
 ² Only works when connected to mCore servers.</br>
 ³ Works anywhere, but most features are available only when connected to mCore servers.
 
 ### Planned features
-* Automated login to skip authentication process via commands /login.
+* Built-in opt-out Resource Pack for MAJNRUJ Server.
+* Automated login to skip authentication process via command /login.
 * Better Discord RPC implementation to invite players, join their parties, etc.
-* Improved chat with multiple tabs - General Chat, Trade Chat, DMs, etc.
-* (Not exactly related) Public open-source release of simplified mCore as plugin to support mClient players.
+* Public open-source release of simplified mCore as Spigot/Paper plugin to support mClient players. Fabric-based release of mCore is not planned!
 * Any ideas? Discord link below ;-)
 ## Contact
 [![Join us on Discord](https://img.shields.io/discord/792768473964740608.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://discord.gg/K8Tt5F5STH)
@@ -43,7 +55,7 @@ Join us on [Discord](https://discord.gg/K8Tt5F5STH).
 It can of course be disabled in the configuration.
 Telemetry is only sent when connected to mCore servers and data are sent through packets.</br>
 ### List of contained data in telemetry packets:
-* Client's brand (eg. mClient v1.3)
+* Client's brand (eg. mClient v1.4)
 * Game Version (eg. 1.20.4)
 * Client modification status (boolean)
 * Mods information (Count, List, SHA256 ModList Checksum)

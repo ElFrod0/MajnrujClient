@@ -1,0 +1,6 @@
+{
+    "pack": {
+        "pack_format": 22,
+        "description": "Replaces Unicode character U+F8FF with transparent image."
+    }
+}

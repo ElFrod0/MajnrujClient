@@ -14,6 +14,7 @@ public class Config {
     public boolean sendTelemetry = true;
     public boolean sendPeriodicTelemetry = true;
     public boolean useDiscordRichPresence = true;
+    public boolean useBetterChat = true;
     // MAJNRUJ Client - End
 
     public Seats seats = new Seats();

@@ -62,6 +62,7 @@ public class OptionsScreen extends AbstractScreen {
                 DiscordRP.stop();
             }
         })));
+        this.options.add(new BooleanButton(this.centerX + 10, 110, 150, 20, new BooleanOption("use-better-chat", () -> config.useBetterChat, (value) -> config.useBetterChat = value)));
         // MAJNRUJ Client - End
         this.options.add(net.minecraft.client.gui.components.Button.builder(CommonComponents.GUI_DONE, (button) -> onClose()).bounds(this.centerX - 100, 150, 200, 20).build());
 

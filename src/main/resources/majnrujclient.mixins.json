@@ -9,6 +9,9 @@
     "MixinTitleScreen"
   ],
   "mixins": [
+    "chat.MixinChatComponent",
+    "chat.MixinMouseHandler",
+    "chat.MixinGUI",
     "MixinGameMenuScreen",
     "compat.modmenu.MixinModMenuEventHandler",
     "MixinClientBrand",
