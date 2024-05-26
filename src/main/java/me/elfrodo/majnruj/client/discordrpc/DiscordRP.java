@@ -132,8 +132,9 @@ public class DiscordRP {
                 break;
             case 2:
                 if (currentWorld != "N/A") {
-                    activity.setDetails("Svět: " + currentWorld);
+                    activity.setDetails("World: " + currentWorld);
                 }
+                roll++;
                 break;
             case 3: // Only the last case scenario will use method setMajnrujServer();
                 if (instanceType != 0) {

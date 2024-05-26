@@ -8,6 +8,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import me.elfrodo.majnruj.client.MajnrujClient;
+import me.elfrodo.majnruj.client.chat.ChatTabManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
@@ -18,13 +19,25 @@ public abstract class MixinGUI {
     @Shadow
     @Final
     private final Minecraft minecraft = Minecraft.getInstance();
+
+    private final ChatTabManager chatTabManager = new ChatTabManager();
     
     @Inject(method = "render", at = @At("HEAD"), cancellable = true)
     private void onRender(GuiGraphics guiGraphics, float tickDelta, CallbackInfo ci) {
         if (MajnrujClient.instance().getConfig().useBetterChat) {
             if (minecraft.screen == null && minecraft.options.keyChat.consumeClick()) {
-                minecraft.setScreen(new ChatScreen("")); // Ensure that chat opens consistently.
+                minecraft.setScreen(getChatScreen(chatTabManager.getCurrentTab()));
             }
         }
+    }
+
+    private ChatScreen getChatScreen(String currentTab) {
+        String string;
+        if (currentTab.charAt(0) == '@') {
+            string = "/msg " + currentTab.substring(1) + " ";
+        } else {
+            string = chatTabManager.getCommand();
+        }
+        return new ChatScreen(string);
     }
 }

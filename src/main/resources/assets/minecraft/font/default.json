@@ -1,5 +1,6 @@
 {
     "providers": [
-		{"type": "bitmap","file": "minecraft:font/blank.png","ascent": 7,"height": 7,"chars": ["\uF8FF"]}
+      {"type": "bitmap", "file": "minecraft:font/discord.png", "ascent": 7, "height": 7, "chars": ["\uF8FE"]},  
+		  {"type": "bitmap", "file": "minecraft:font/blank.png", "ascent": 7, "height": 7, "chars": ["\uF8FF"]}
     ]
 }

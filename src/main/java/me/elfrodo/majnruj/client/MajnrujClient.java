@@ -61,7 +61,7 @@ import me.elfrodo.majnruj.client.util.TimedTelemetryUtil;
 public class MajnrujClient implements ClientModInitializer {
     // MAJNRUJ Client - Start
     private static MajnrujClient instance;
-    private static Logger logger = LogManager.getLogger();
+    private static Logger logger = LogManager.getLogger("mClient");
     private final CreditsConfig creditsConfig;
     public static boolean isConnectedToMajnrujServer = false;
     private static ResourceKey<Level> currentWorld;
@@ -126,7 +126,7 @@ public class MajnrujClient implements ClientModInitializer {
         Component component = Component.literal("MAJNRUJ Client " + Constants.VERSION).withStyle(whiteStyle.withClickEvent(webClickEvent));
         creditsConfig.MAIN_MENU.getBottomLeft().add(0, component);
         creditsConfig.PAUSE_MENU.getBottomLeft().add(0, component);
-        MutableComponent text1 = Component.literal("Připoj se na ").setStyle(whiteStyle.withClickEvent(discordClickEvent));
+        MutableComponent text1 = Component.literal("Připoj se na ").setStyle(whiteStyle.withClickEvent(discordClickEvent));
         MutableComponent text2 = Component.literal("Discord").setStyle(blueStyle.withClickEvent(discordClickEvent));
         MutableComponent combined = text1.append(text2);
         creditsConfig.MAIN_MENU.getBottomLeft().add(1, combined);
@@ -183,16 +183,16 @@ public class MajnrujClient implements ClientModInitializer {
         ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
             if (getConfig().useBetterChat) {
                 ChatTabManager.clearMessages(); // Purge old messages
-                ChatTabManager.currentTab = ChatTabManager.defaultTab; // Set default tab
+                ChatTabManager.currentTab = ChatTabManager.DEFAULT_TAB; // Set default tab
             }
             BeehivePacket.numOfBees = null;
             if (!client.isLocalServer()) {
                 ByteArrayDataOutput out = Packet.out();
                 out.writeInt(Constants.PROTOCOL);
-                Packet.send(Constants.HELLO, out);
+                Packet.send(Constants.PURPUR, out);
                 // PURPUR Client - End
                 // MAJNRUJ Client - Start
-                Packet.send(Constants.MAJNRUJ_HELLO, out);
+                Packet.send(Constants.MAJNRUJ, out);
                 DiscordRP.setMultiplayer();
             }
             if (client.isSingleplayer()) {

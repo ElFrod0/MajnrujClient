@@ -33,16 +33,19 @@ public abstract class MixinChatComponent implements ChatInterface {
 
     private final ChatTabManager chatTabManager = new ChatTabManager();
     private final char invisibleChar = Constants.INVISIBLE_CHAR;
-    private String lastRenderedTab = ChatTabManager.defaultTab;
+    private String lastRenderedTab = ChatTabManager.DEFAULT_TAB;
 
     private final int yOffsetConstant = 38;
+    private final int yLineOffset = 13;
     private final int xOffset = 4;
     private final int padding = 4;
     private final int backgroundMargin = 2; // Only even numbers!
-    private final int colorRead = 0xFFFFFF; // White
-    private final int colorUnread = 0xAAAAAA; // Gray
-    private final int colorActive = 0xFFFFFF; // White
-    private final int colorHover = 0x55555555; // Transparent gray
+    private final int bgHoverColor = 0x55555555; // Transparent gray
+    private final int colorActive = 0xFF00FFFF; // White
+    private final int colorRead = 0xFFAAAAAA; // Gray
+    private final int colorUnread = 0xFFFFFFFF; // White
+    private final int colorPMRead = 0xFF00AA00; // Dark green
+    private final int colorPMUnread = 0xFF00FF00; // Green
 
     @Inject(method = "addMessage(Lnet/minecraft/network/chat/Component;)V", at = @At("HEAD"), cancellable = true)
     private void onAddMessage(Component message, CallbackInfo ci) {
@@ -60,32 +63,42 @@ public abstract class MixinChatComponent implements ChatInterface {
         }
     }
 
+    @Inject(method = "logChatMessage", at = @At("HEAD"), cancellable = true)
+    private void cancelLogMessage(CallbackInfo ci) {
+        if (MajnrujClient.instance().getConfig().useBetterChat) {
+            ci.cancel();
+        }
+    }
+
     @Inject(method = "render", at = @At("HEAD"))
     private void onRender(GuiGraphics guiGraphics, int tickDelta, int mouseX, int mouseY, CallbackInfo ci) {
         if (MajnrujClient.instance().getConfig().useBetterChat) {
             MultiBufferSource.BufferSource bufferSource = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
-
+            
             int yOffset = minecraft.getWindow().getGuiScaledHeight() - yOffsetConstant;
             int xActive = xOffset;
+            int bgColor = (int) (minecraft.options.textBackgroundOpacity().get() * 255.0F) << 24;
 
+            // Render chat tabs
             for (String tabName : chatTabManager.getTabNames()) {
-                int color = chatTabManager.hasNewMessages(tabName) ? colorRead : colorUnread;
-                int bgColor = (int) (minecraft.options.textBackgroundOpacity().get() * 255.0F) << 24;
-                int hoverColor = (mouseX >= xActive && mouseX <= xActive + minecraft.font.width(tabName) && mouseY >= yOffset && mouseY <= yOffset + minecraft.font.lineHeight) ? colorHover : bgColor; 
+                int color = chatTabManager.hasNewMessages(tabName) ? colorUnread : colorRead;
+                int hoverColor = (mouseX >= xActive && mouseX <= xActive + minecraft.font.width(tabName) && mouseY >= yOffset && mouseY <= yOffset + minecraft.font.lineHeight) ? bgHoverColor : bgColor;
 
-                // Draw background rectangle
-                guiGraphics.fill(xActive - backgroundMargin, yOffset - backgroundMargin, xActive + minecraft.font.width(tabName) + backgroundMargin, yOffset + minecraft.font.lineHeight + backgroundMargin, hoverColor);    
-                if (tabName.equals(chatTabManager.getCurrentTab())) {
-                    // Draw text & underline for current tab
-                    minecraft.font.drawInBatch(tabName, xActive, yOffset, colorActive, true, guiGraphics.pose().last().pose(), bufferSource, Font.DisplayMode.NORMAL, 0, 15728880);
-                    guiGraphics.fill(xActive, yOffset + minecraft.font.lineHeight, xActive + minecraft.font.width(tabName), yOffset + minecraft.font.lineHeight + backgroundMargin / 2, 0xFFFFFFFF);
-                } else {
-                    // Draw text with no underline for other tabs
-                    minecraft.font.drawInBatch(tabName, xActive, yOffset, color, true, guiGraphics.pose().last().pose(), bufferSource, Font.DisplayMode.NORMAL, 0, 15728880);
-                }
+                drawTab(guiGraphics, tabName, xActive, yOffset, bufferSource, colorActive, color, hoverColor);
                 xActive += minecraft.font.width(tabName) + padding;
             }
 
+            xActive = xOffset;
+            yOffset += yLineOffset;
+
+            // Render private message chat tabs
+            for (String tabName : chatTabManager.getPrivateTabNames()) {
+                int color = chatTabManager.hasNewMessages(tabName) ? colorPMUnread : colorPMRead;
+                int hoverColor = (mouseX >= xActive && mouseX <= xActive + minecraft.font.width(tabName) && mouseY >= yOffset && mouseY <= yOffset + minecraft.font.lineHeight) ? bgHoverColor : bgColor;
+
+                drawTab(guiGraphics, tabName, xActive, yOffset, bufferSource, colorActive, color, hoverColor);
+                xActive += minecraft.font.width(tabName) + padding;
+            }
             bufferSource.endBatch();
 
             String currentTab = chatTabManager.getCurrentTab();
@@ -100,7 +113,6 @@ public abstract class MixinChatComponent implements ChatInterface {
         if (MajnrujClient.instance().getConfig().useBetterChat) {
             int x = xOffset;   
             int yOffset = minecraft.getWindow().getGuiScaledHeight() - yOffsetConstant; 
-
             for (String tabName : chatTabManager.getTabNames()) {
                 int tabWidth = minecraft.font.width(tabName);
                 if (mouseX >= x && mouseX <= x + tabWidth && mouseY >= yOffset && mouseY <= yOffset + minecraft.font.lineHeight) {
@@ -112,7 +124,27 @@ public abstract class MixinChatComponent implements ChatInterface {
                         chatInterface.clearChat();
                         List<Component> messages = chatTabManager.getMessages(chatTabManager.getCurrentTab());
                         chatInterface.addMessages(messages);
+                        chatTabManager.markTabAsRead(tabName);
+                        cir.setReturnValue(true);
+                        return;
+                    }
+                }
+                x += tabWidth + padding;
+            }
 
+            x = xOffset;
+            yOffset += yLineOffset;
+            for (String tabName : chatTabManager.getPrivateTabNames()) {
+                int tabWidth = minecraft.font.width(tabName);
+                if (mouseX >= x && mouseX <= x + tabWidth && mouseY >= yOffset && mouseY <= yOffset + minecraft.font.lineHeight) {
+                    chatTabManager.setCurrentTab(tabName);
+
+                    if (!tabName.equals(lastRenderedTab)) {
+                        // Update the chat with messages from selected tab.
+                        ChatInterface chatInterface = (ChatInterface) minecraft.gui.getChat();
+                        chatInterface.clearChat();
+                        List<Component> messages = chatTabManager.getPrivateMessages(chatTabManager.getCurrentTab());
+                        chatInterface.addMessages(messages);
                         chatTabManager.markTabAsRead(tabName);
                         cir.setReturnValue(true);
                         return;
@@ -121,11 +153,11 @@ public abstract class MixinChatComponent implements ChatInterface {
                 x += tabWidth + padding;
             }
         }
-    }    
+    } 
 
     private boolean isMessageRelevantToCurrentTab(Component message) {
         String messageText = message.getString();
-        if (chatTabManager.getCurrentTab().equals(ChatTabManager.defaultTab)) {
+        if (chatTabManager.getCurrentTab().equals(ChatTabManager.DEFAULT_TAB)) {
             return true;
         }
         if (messageText.startsWith("[1]") && chatTabManager.getCurrentTab().equals("General")) {
@@ -155,7 +187,20 @@ public abstract class MixinChatComponent implements ChatInterface {
         } else if (messageText.startsWith("[5]")) {
             chatTabManager.addMessage("Admin", message);
         } else {
-            chatTabManager.addMessage(ChatTabManager.defaultTab, message);
+            chatTabManager.addMessage(ChatTabManager.DEFAULT_TAB, message);
+        }
+    }
+
+    private void drawTab(GuiGraphics guiGraphics, String tabName, int xActive, int yOffset, MultiBufferSource.BufferSource bufferSource, int color, int color2, int hoverColor) {
+        // Draw background rectangle
+        guiGraphics.fill(xActive - backgroundMargin, yOffset - backgroundMargin, xActive + minecraft.font.width(tabName) + backgroundMargin, yOffset + minecraft.font.lineHeight + backgroundMargin, hoverColor);    
+        if (tabName.equals(chatTabManager.getCurrentTab())) {
+            // Draw text & underline for current tab
+            minecraft.font.drawInBatch(tabName, xActive, yOffset, color, true, guiGraphics.pose().last().pose(), bufferSource, Font.DisplayMode.NORMAL, 0, 15728880);
+            guiGraphics.fill(xActive, yOffset + minecraft.font.lineHeight, xActive + minecraft.font.width(tabName), yOffset + minecraft.font.lineHeight + (backgroundMargin / 2), color);
+        } else {
+            // Draw text with no underline for other tabs
+            minecraft.font.drawInBatch(tabName, xActive, yOffset, color2, true, guiGraphics.pose().last().pose(), bufferSource, Font.DisplayMode.NORMAL, 0, 15728880);
         }
     }
 

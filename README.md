@@ -26,22 +26,21 @@ This Client mod is not expected to be run alone, but as part of slightly modifie
 * Improved chat with multiple tabs - General Chat, Trade Chat, DMs, etc. (**BETA!**) ³
   * Current "Better Chat" features:
     * Tabs for different chats.
+    * Tabs specifically for DMs.
     * Markers if you have unread messages.
     * Compact design linked seamlessly with Vanilla configuration.
+    * Feedback features to know where you're going to write.
   * There will be more features later on. It just takes time to implement. You can expect:
-    * Direct Messages will have it's own tab for every player you talk with.
-    * More feedback features to know where you're writing.
     * Longer history (> 100 messages) in each tab.
     * RegEx capabilities + detailed configuration for supporting **NEARLY EVERY** server.
     * Per-server pre-made configuration (via PRs soon).
-    * Intercepting Vanilla chat logging
+* Built-in resource pack to make things internally easier.
 
 ¹ Only works when connected to [Purpur](https://github.com/PurpurMC/Purpur) servers.</br>
 ² Only works when connected to mCore servers.</br>
 ³ Works anywhere, but most features are available only when connected to mCore servers.
 
 ### Planned features
-* Built-in opt-out Resource Pack for MAJNRUJ Server.
 * Automated login to skip authentication process via command /login.
 * Better Discord RPC implementation to invite players, join their parties, etc.
 * Public open-source release of simplified mCore as Spigot/Paper plugin to support mClient players. Fabric-based release of mCore is not planned!
