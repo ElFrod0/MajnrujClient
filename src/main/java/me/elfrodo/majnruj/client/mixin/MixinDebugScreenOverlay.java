@@ -1,5 +1,7 @@
 package me.elfrodo.majnruj.client.mixin;
 
+import java.util.List;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.DebugScreenOverlay;
 import net.minecraft.core.BlockPos;
@@ -7,19 +9,15 @@ import net.minecraft.world.level.block.BeehiveBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
-
-import java.util.List;
-
+import me.elfrodo.majnruj.client.MajnrujClient;
+import me.elfrodo.majnruj.client.network.ClientboundBeehivePayload;
+import me.elfrodo.majnruj.client.network.ServerboundBeehivePayload;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
-
-import me.elfrodo.majnruj.client.MajnrujClient;
-import me.elfrodo.majnruj.client.network.BeehivePacket;
-
 
 @Mixin(DebugScreenOverlay.class)
 public class MixinDebugScreenOverlay {
@@ -50,12 +48,12 @@ public class MixinDebugScreenOverlay {
             if (now > this.lastTime + 500 || !pos.equals(this.lastPos)) {
                 this.lastPos = pos;
                 this.lastTime = now;
-                BeehivePacket.requestBeehiveData(pos);
+                ClientPlayNetworking.send(new ServerboundBeehivePayload(pos));
             }
-            if (BeehivePacket.numOfBees != null) {
+            if (ClientboundBeehivePayload.NUM_OF_BEES != null) {
                 for (int i = 0; i < list.size(); i++) {
                     if (list.get(i).contains("honey_level")) {
-                        list.add(i + 1, "num_of_bees: " + BeehivePacket.numOfBees);
+                        list.add(i + 1, "num_of_bees: " + ClientboundBeehivePayload.NUM_OF_BEES);
                         break;
                     }
                 }

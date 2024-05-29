@@ -1,7 +1,10 @@
 package me.elfrodo.majnruj.client.gui.screen;
 
+import net.minecraft.client.Minecraft;
+
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.screens.OptionsSubScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
@@ -10,14 +13,17 @@ import java.util.List;
 import me.elfrodo.majnruj.client.MajnrujClient;
 import me.elfrodo.majnruj.client.gui.screen.widget.Tickable;
 
-public abstract class AbstractScreen extends Screen {
+public abstract class AbstractScreen extends OptionsSubScreen {
+    public static final Component TITLE = Component.translatable("purpurclient.options.title");
+
     private final Screen parent;
 
     protected List<AbstractWidget> options;
     protected int centerX;
 
+    @SuppressWarnings("resource")
     public AbstractScreen(Screen parent) {
-        super(Component.translatable("majnrujclient.options.title"));
+        super(parent, Minecraft.getInstance().options, TITLE);
         this.parent = parent;
     }
 
@@ -28,18 +34,9 @@ public abstract class AbstractScreen extends Screen {
     }
 
     @Override
-    public void render(GuiGraphics context, int mouseX, int mouseY, float delta) {
-        context.drawCenteredString(this.font, this.title, this.centerX, 15, 0xFFFFFFFF);
-        super.render(context, mouseX, mouseY, delta);
-    }
-
-    @Override
     public void renderBackground(GuiGraphics context, int mouseX, int mouseY, float delta) {
-        if (this.minecraft != null && this.minecraft.level != null) {
-            context.fillGradient(0, 0, this.width, this.height, 0xF00F4863, 0xF0370038);
-        } else {
-            this.renderDirtBackground(context);
-        }
+        super.renderBackground(context, mouseX, mouseY, delta);
+        context.fillGradient(0, 0, this.width, this.height, 0x800F4863, 0x80370038);
     }
 
     @Override

@@ -36,7 +36,10 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
+import net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationConnectionEvents;
+import net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationNetworking;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
@@ -48,7 +51,9 @@ import me.elfrodo.majnruj.client.config.Config;
 import me.elfrodo.majnruj.client.config.ConfigManager;
 import me.elfrodo.majnruj.client.config.CreditsConfig;
 import me.elfrodo.majnruj.client.discordrpc.DiscordRP;
-import me.elfrodo.majnruj.client.network.BeehivePacket;
+import me.elfrodo.majnruj.client.network.ClientboundBeehivePayload;
+import me.elfrodo.majnruj.client.network.ServerboundBeehivePayload;
+import me.elfrodo.majnruj.client.network.ServerboundPurpurClientHelloPayload;
 import me.elfrodo.majnruj.client.network.MajnrujHandshakePacket;
 import me.elfrodo.majnruj.client.network.MajnrujRichPresencePacket;
 import me.elfrodo.majnruj.client.network.Packet;
@@ -179,17 +184,16 @@ public class MajnrujClient implements ClientModInitializer {
         });
         // MAJNRUJ Client - End
 
-        // PURPUR Client - Start
         ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
             if (getConfig().useBetterChat) {
                 ChatTabManager.clearMessages(); // Purge old messages
                 ChatTabManager.currentTab = ChatTabManager.DEFAULT_TAB; // Set default tab
             }
-            BeehivePacket.numOfBees = null;
+
+            // PURPUR Client - Start
             if (!client.isLocalServer()) {
                 ByteArrayDataOutput out = Packet.out();
                 out.writeInt(Constants.PROTOCOL);
-                Packet.send(Constants.PURPUR, out);
                 // PURPUR Client - End
                 // MAJNRUJ Client - Start
                 Packet.send(Constants.MAJNRUJ, out);
@@ -201,7 +205,16 @@ public class MajnrujClient implements ClientModInitializer {
             // MAJNRUJ Client - End
         });
 
-        ClientPlayNetworking.registerGlobalReceiver(Constants.BEEHIVE_S2C, BeehivePacket::receiveBeehiveData); // PURPUR Client
+        // PURPUR Client - Start
+        PayloadTypeRegistry.configurationC2S().register(ServerboundPurpurClientHelloPayload.TYPE, ServerboundPurpurClientHelloPayload.STREAM_CODEC);
+        PayloadTypeRegistry.playC2S().register(ServerboundBeehivePayload.TYPE, ServerboundBeehivePayload.STREAM_CODEC);
+        PayloadTypeRegistry.playS2C().register(ClientboundBeehivePayload.TYPE, ClientboundBeehivePayload.STREAM_CODEC);
+        ClientPlayNetworking.registerGlobalReceiver(ClientboundBeehivePayload.TYPE, ClientboundBeehivePayload::handle);
+        ClientConfigurationConnectionEvents.READY.register((handler, client) -> {
+            ClientboundBeehivePayload.NUM_OF_BEES = null;
+            ClientConfigurationNetworking.send(new ServerboundPurpurClientHelloPayload());
+        });
+        // PURPUR Client - End
         // MAJNRUJ Client - Start
         ClientPlayNetworking.registerGlobalReceiver(Constants.MAJNRUJ_HANDSHAKE_S2C, MajnrujHandshakePacket::receive);
         ClientPlayNetworking.registerGlobalReceiver(Constants.MAJNRUJ_RICH_PRESENCE_S2C, MajnrujRichPresencePacket::receive);

@@ -17,15 +17,9 @@ public class Constants {
     public static final String MAJNRUJ_WEB_URL = "https://majnruj.cz/";
     public static final String MAJNRUJ_SERVER_IP = "play.majnruj.cz";
     public static final char INVISIBLE_CHAR = '\uF8FF';
-    // MAJNRUJ Client - End
-    // PURPUR Client - Start
-    public static final int PROTOCOL = 0;
-
     public static final ResourceLocation PURPUR = new ResourceLocation("purpur", "client");
-    public static final ResourceLocation BEEHIVE_C2S = new ResourceLocation("purpur", "beehive_c2s");
-    public static final ResourceLocation BEEHIVE_S2C = new ResourceLocation("purpur", "beehive_s2c");
-    // PURPUR Client - End
-    // MAJNRUJ Client - Start
+    public static final ResourceLocation PURPUR_BEEHIVE_S2C = new ResourceLocation("purpur", "beehive_s2c");
+    public static final ResourceLocation PURPUR_BEEHIVE_C2S = new ResourceLocation("purpur", "beehive_c2s");
     public static final ResourceLocation MAJNRUJ = new ResourceLocation("majnruj", "client");
     public static final ResourceLocation MAJNRUJ_HANDSHAKE_C2S = new ResourceLocation("majnruj", "handshake_c2s");
     public static final ResourceLocation MAJNRUJ_HANDSHAKE_S2C = new ResourceLocation("majnruj", "handshake_s2c");
@@ -38,4 +32,5 @@ public class Constants {
     public static final float DEG2RAD = (float) Math.PI / 180F;
     public static final float HALF_PI = (float) Math.PI / 2F;
     // PURPUR Client - End
+    public static final int PROTOCOL = 0;
 }
