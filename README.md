@@ -13,11 +13,10 @@ mClient is designed to work together with [Purpur](https://github.com/PurpurMC/P
 This Client mod is not expected to be run alone, but as part of slightly modified Fabulously Optimized modpack. Available here: **NOT YET**
 </div>
 
-### Current Features in 1.20.4:
+### Current Features in 1.20.6:
 * Customizable mob passenger offsets.
 * Adds bee counts inside beehives to debug screen.¹
 * <s>Fancy Purpur-themed Loading Screen (can be disabled in the config)</s> <strong>Currently removed, will get "rebranded" soon.</strong>
-* Displays Custom Enchantments instead of stripping them from the client.
 * Removes the client-side limit of 255 levels.
 * Fancy Window Title with random texts similar to MC's splash texts or Terraria's window title texts.
 * Implementation of [@isXander's](https://github.com/isXander) mod [Main-Menu-Credits](https://github.com/isXander/main-menu-credits).

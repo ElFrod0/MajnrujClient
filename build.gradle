@@ -1,15 +1,15 @@
 plugins {
-    id 'com.github.johnrengelman.shadow' version '7.1.2'
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
     id 'io.github.juuxel.loom-quiltflower' version '1.8.+'
-    id 'fabric-loom' version '1.4-SNAPSHOT'
+    id 'fabric-loom' version '1.6-SNAPSHOT'
     id 'com.modrinth.minotaur' version '2.+'
     id 'me.hypherionmc.cursegradle' version '2.+'
     id 'com.github.breadmoirai.github-release' version '2.+'
     id 'io.github.p03w.machete' version '1.1.2'
 }
 
-sourceCompatibility = JavaVersion.VERSION_17
-targetCompatibility = JavaVersion.VERSION_17
+sourceCompatibility = JavaVersion.VERSION_21
+targetCompatibility = JavaVersion.VERSION_21
 
 archivesBaseName = project.archives_base_name
 project.build_num = System.getenv("GITHUB_RUN_NUMBER") ?: "SNAPSHOT"
@@ -33,13 +33,18 @@ repositories {
     maven { 
         url = "https://jitpack.io"
     }
+    maven {
+        url = 'https://maven.parchmentmc.org'
+    }
     mavenCentral()
 }
 
 dependencies {
     minecraft("com.mojang:minecraft:${project.minecraft_version}")
-    mappings(loom.officialMojangMappings())
-    //mappings("net.fabricmc:yarn:${project.minecraft_version}+build.+:v2")
+    mappings loom.layered() {
+        officialMojangMappings()
+        parchment("org.parchmentmc.data:parchment-${minecraft_version}:${project.parchment_version}@zip")
+    }
     modImplementation("net.fabricmc:fabric-loader:${project.loader_version}")
     modImplementation("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}")
     modImplementation("com.terraformersmc:modmenu:${project.modmenu_version}")
@@ -64,6 +69,8 @@ dependencies {
 
 processResources {
     inputs.property "version", project.version
+    inputs.property "minecraft_version", project.properties["minecraft_version"]
+    inputs.property "loader_version", project.properties["loader_version"]
 
     filesMatching("fabric.mod.json") {
         expand "version": project.version
@@ -72,7 +79,7 @@ processResources {
 
 tasks.withType(JavaCompile).configureEach {
     it.options.encoding = "UTF-8"
-    it.options.release.set(17)
+    it.options.release.set(21)
 }
 
 jar {
@@ -83,6 +90,7 @@ jar {
 
 loom {
     mixin.defaultRefmapName = "majnrujclient.refmap.json"
+    accessWidenerPath = file("src/main/resources/majnrujclient.accesswidener")
 }
 
 modrinth {
