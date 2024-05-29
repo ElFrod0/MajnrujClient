@@ -18,8 +18,7 @@ import net.minecraft.client.gui.screens.ChatScreen;
 public abstract class MixinGUI {
     @Shadow
     @Final
-    private final Minecraft minecraft = Minecraft.getInstance();
-
+    private Minecraft minecraft;
     private final ChatTabManager chatTabManager = new ChatTabManager();
     
     @Inject(method = "render", at = @At("HEAD"), cancellable = true)

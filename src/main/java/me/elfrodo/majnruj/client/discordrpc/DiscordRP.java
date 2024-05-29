@@ -11,6 +11,7 @@ import me.elfrodo.majnruj.client.MajnrujClient;
 
 import de.jcm.discordgamesdk.Core;
 import de.jcm.discordgamesdk.CreateParams;
+import de.jcm.discordgamesdk.GameSDKException;
 import de.jcm.discordgamesdk.activity.Activity;
 import de.jcm.discordgamesdk.activity.ActivityButton;
 import de.jcm.discordgamesdk.activity.ActivityButtonsMode;
@@ -20,6 +21,10 @@ public class DiscordRP {
     private static MajnrujClient instance = MajnrujClient.instance();
     public static boolean enabled; // Is Discord Rich Pressence enabled?
     public static boolean running; // Is Discord Rich Pressence running?
+    private static boolean idApplied = false; // User ID shown in main/pause menu.
+    private static boolean appDeadError = false;
+    private static boolean appOffError = false;
+    private static boolean networkError = false;
     // Player stuff
     public static String playerRace = "Human";
     public static int playerLevel = 1;
@@ -54,58 +59,74 @@ public class DiscordRP {
             return;
         }
         instance.getLogger().info("Initializing Discord RPC...");
-        discordRPThread = new Thread(() -> {
-            running = true;
-            instance.getLogger().info("Using thread with ID: " + discordRPThread.getId());
-            CreateParams params = new CreateParams();
-            params.setClientID(Constants.DISCORD_APP_ID);
-            params.setFlags(CreateParams.getDefaultFlags());
+        try {
+            discordRPThread = new Thread(() -> {
+                running = true;
+                instance.getLogger().info("Using thread with ID: " + discordRPThread.getId());
+                CreateParams params = new CreateParams();
+                params.setClientID(Constants.DISCORD_APP_ID);
+                params.setFlags(CreateParams.getDefaultFlags());
 
-            try {
-                core = new Core(params);
-            } catch (RuntimeException e) {
-                instance.getLogger().error("Discord RPC could not be initialized. Is Discord running? In case you don't use Discord, please disable it in configuration (/minecraft/config/majnrujclient.json). Be sure to reboot the game afterwards! If Discord is actually running, please report this error.", e);
-                running = false;
-                setThreadStarted(true); // Main Thread is waiting for this. This actually makes the game boot up with Discord disabled.
-                applyErrorOnScreen("Discord app not turned on!"); // Not everyone is checking logs, inform the user.
-                stop(); // Kill the thread now.
-                return;
-            }
-            activity = new Activity();
-            activity.assets().setLargeImage(Constants.DISCORD_RP_LOGO_KEY);
-            //activity.assets().setSmallImage(key);
-            ActivityButton button1 = new ActivityButton();
-            ActivityButton button2 = new ActivityButton();
-            button1.setLabel("MAJNRUJ Website");
-            button1.setUrl("https://majnruj.cz/");
-            button2.setLabel("GitHub Repository");
-            button2.setUrl("https://github.com/ElFrod0/MajnrujClient/");
-    
-            activity.setActivityButtonsMode(ActivityButtonsMode.BUTTONS);
-            activity.addButton(button1);
-            activity.addButton(button2);
-    
-            core.activityManager().updateActivity(activity);
-            setCore(core);
-            setThreadStarted(true);
-            applyIDOnScreen(core.userManager().getCurrentUser().getUsername() + "#" + core.userManager().getCurrentUser().getDiscriminator());
-            instance.getLogger().info("Discord RPC initialized.");
-            while(clientRunning && enabled) {
-                core.runCallbacks();
-                if (MajnrujClient.isConnectedToMajnrujServer) {
-                    counter++;
-                    if (counter == 750) { // 20 milliseconds * 750 = 15 seconds
-                        counter = 0;
-                        rollDetails();
-                    }
-                }
                 try {
-                    Thread.sleep(20); // 20 milliseconds
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    core = new Core(params);
+                } catch (RuntimeException e) {
+                    instance.getLogger().error("Discord RPC could not be initialized. Is Discord running? In case you don't use Discord, please disable it in configuration (/minecraft/config/majnrujclient.json). Be sure to reboot the game afterwards! If Discord is actually running, please report this error.", e);
+                    running = false;
+                    setThreadStarted(true); // Main Thread is waiting for this. This actually makes the game boot up with Discord disabled.
+                    applyErrorOnScreen("Discord app not turned on!", 2); // Not everyone is checking logs, inform the user.
+                    stop(); // Kill the thread now.
+                    return;
                 }
-            }
-        });
+                activity = new Activity();
+                activity.assets().setLargeImage(Constants.DISCORD_RP_LOGO_KEY);
+                //activity.assets().setSmallImage(key);
+                ActivityButton button1 = new ActivityButton();
+                ActivityButton button2 = new ActivityButton();
+                button1.setLabel("MAJNRUJ Website");
+                button1.setUrl("https://majnruj.cz/");
+                button2.setLabel("GitHub Repository");
+                button2.setUrl("https://github.com/ElFrod0/MajnrujClient/");
+        
+                activity.setActivityButtonsMode(ActivityButtonsMode.BUTTONS);
+                activity.addButton(button1);
+                activity.addButton(button2);
+        
+                core.activityManager().updateActivity(activity);
+                setCore(core);
+                setThreadStarted(true);
+                applyIDOnScreen(core.userManager().getCurrentUser().getUsername() + "#" + core.userManager().getCurrentUser().getDiscriminator());
+                instance.getLogger().info("Discord RPC initialized.");
+                try {
+                    while(clientRunning && enabled) {
+                        core.runCallbacks();
+                        if (MajnrujClient.isConnectedToMajnrujServer) {
+                            counter++;
+                            if (counter == 750) { // 20 milliseconds * 750 = 15 seconds
+                                counter = 0;
+                                rollDetails();
+                            }
+                        }
+                        try {
+                            Thread.sleep(20); // 20 milliseconds
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                } catch (GameSDKException e) {
+                    instance.getLogger().error("Discord RPC Thread threw GameSDKException. Are you connected to network? If yes, please report this error.", e);
+                    applyErrorOnScreen("No connection to Discord!", 3);
+                } catch (RuntimeException e) {
+                    instance.getLogger().error("Discord RPC Thread threw RuntimeException. Did you kill Discord app? If not, please report this error.", e);
+                    applyErrorOnScreen("Discord app died!", 1);
+                } finally {
+                    stop();
+                }
+            });
+        } catch (RuntimeException e) {
+            instance.getLogger().error("Discord RPC Thread threw RuntimeException. Did you kill Discord app? If not, please report this error.", e);
+            applyErrorOnScreen("Discord app died!", 1);
+            stop();
+        }
     }
 
     public static Activity getActivity() {
@@ -113,7 +134,13 @@ public class DiscordRP {
     }
 
     private static void update() {
-        DiscordRP.core.activityManager().updateActivity(activity);
+        try {
+            DiscordRP.core.activityManager().updateActivity(activity);
+        } catch (RuntimeException e) {
+            instance.getLogger().error("Discord RPC Thread threw RuntimeException. Did you kill Discord app? If not, please report this error.", e);
+            applyErrorOnScreen("Discord app died!", 1);
+            stop();
+        }
     }
 
     private static void setCore(Core core) {
@@ -204,13 +231,43 @@ public class DiscordRP {
     }
 
     public static void applyIDOnScreen(String id) {
+        if (idApplied) {
+            return;
+        }
         instance.getCreditsConfig().MAIN_MENU.addTopLeft("Discord RPC (User: " + id + ")", ChatFormatting.WHITE, null);
         instance.getCreditsConfig().PAUSE_MENU.addTopLeft("Discord RPC (User: " + id + ")", ChatFormatting.WHITE, null);
+        idApplied = true;
     }
 
-    public static void applyErrorOnScreen(String error) {
-        instance.getCreditsConfig().MAIN_MENU.addTopLeft("Discord RPC Error: " + error, ChatFormatting.RED, null);
-        instance.getCreditsConfig().PAUSE_MENU.addTopLeft("Discord RPC Error: " + error, ChatFormatting.RED, null);
+    public static void applyErrorOnScreen(String error, int errorType) {
+        // 1 - App dead error; 2 - App off error; 3 - Network error
+        boolean showOnScreen = false;
+        switch (errorType) {
+            case 1:
+                if (!appDeadError) {
+                    appDeadError = true;
+                    showOnScreen = true;
+                }
+                break;
+            case 2:
+                if (!appOffError) {
+                    appOffError = true;
+                    showOnScreen = true;
+                }
+                break;
+            case 3:
+                if (!networkError) {
+                    networkError = true;
+                    showOnScreen = true;
+                }
+                break;
+            default:
+                break;
+        }
+        if (showOnScreen) {
+            instance.getCreditsConfig().MAIN_MENU.addTopLeft("Discord RPC Error: " + error, ChatFormatting.RED, null);
+            instance.getCreditsConfig().PAUSE_MENU.addTopLeft("Discord RPC Error: " + error, ChatFormatting.RED, null);
+        }
     }
 
     public static void setMainMenu() {

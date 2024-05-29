@@ -19,8 +19,7 @@ import java.util.ConcurrentModificationException;
 public abstract class MixinMouseHandler {
     @Shadow
     @Final
-    private final Minecraft minecraft = Minecraft.getInstance();
-
+    private Minecraft minecraft;
     private final ChatTabManager chatTabManager = new ChatTabManager();
 
     private final int xOffsetConstant = 4;

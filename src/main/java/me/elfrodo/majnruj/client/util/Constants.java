@@ -6,8 +6,8 @@ public class Constants {
     // MAJNRUJ Client - Start
     public static final String MOD_CONTAINER = "majnrujclient";
     public static final String BRAND = "MAJNRUJ Client";
-    public static final String VERSION = "v1.4.1";
-    public static final String MODLIST_SHA256_CHECKSUM = "be1ebcba9c6768dc9f195f4fb1992e4c1fdddf4e4386d76c07cc600ccb88cc78"; // v1.4.1 expected SHA-256 checksum
+    public static final String VERSION = "v1.4.2";
+    public static final String MODLIST_SHA256_CHECKSUM = "af1b8761257c0fdb126c02e25e821d75cbd01ac226a43cd78a4f4767b1624f41"; // v1.4.1 expected SHA-256 checksum
     public static final int PERIODIC_TELEMETRY_STARTUP_DELAY = 10_000; // 10 seconds
     public static final int PERIODIC_TELEMETRY_PERIOD = 900_000; // 15 minutes
     public static final int PERIODIC_TELEMETRY_SHORT_PERIOD = 5_000; // 5 seconds
